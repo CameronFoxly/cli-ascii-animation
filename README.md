@@ -1,0 +1,111 @@
+# CLI ASCII Animation Player
+
+A modern web application for displaying ASCII animations in a terminal-style interface. Built with Vite and TypeScript.
+
+## Features
+
+- **Terminal-styled interface** with Fira Code font and green-on-black color scheme
+- **80x15 character display area** perfect for ASCII art animations
+- **Editable text** - you can copy and paste the ASCII content
+- **Animation controls**:
+  - Run button to play the full animation once
+  - Frame-by-frame navigation (previous/next)
+  - Adjustable frame rate (50-2000ms per frame)
+- **12-frame animation support** with placeholder content
+- **GitHub Pages deployment** ready
+
+## Development
+
+### Prerequisites
+
+- Node.js 18 or higher
+- npm
+
+### Getting Started
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/cli-ascii-animation.git
+   cd cli-ascii-animation
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open your browser to `http://localhost:5173`
+
+### Building for Production
+
+```bash
+npm run build
+```
+
+The built files will be in the `dist/` directory.
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+## Deployment
+
+This project is configured for automatic deployment to GitHub Pages via GitHub Actions. When you push to the `main` branch, the workflow will:
+
+1. Build the project
+2. Deploy to GitHub Pages
+3. Make it available at `https://yourusername.github.io/cli-ascii-animation/`
+
+### Manual GitHub Pages Setup
+
+1. Go to your repository settings
+2. Navigate to "Pages" in the sidebar
+3. Under "Source", select "GitHub Actions"
+4. The deployment workflow will handle the rest
+
+## Customizing the Animation
+
+To add your own ASCII animation frames, edit the `animationFrames` array in `src/main.ts`. Each frame should be a string representing the ASCII art for that frame.
+
+Example:
+```typescript
+const animationFrames: string[] = [
+  "Your first frame ASCII art here...",
+  "Your second frame ASCII art here...",
+  // ... up to 12 frames
+];
+```
+
+## Color Scheme Customization
+
+To change the terminal colors, edit the CSS variables in `src/style.css`:
+
+```css
+:root {
+  color: #00ff00; /* Text color */
+  background-color: #000000; /* Background color */
+}
+```
+
+Popular terminal color schemes:
+- **Amber**: `#ffb000` on `#000000`
+- **Blue**: `#0099ff` on `#000000`
+- **White**: `#ffffff` on `#000000`
+
+## Technologies Used
+
+- **Vite** - Fast build tool and development server
+- **TypeScript** - Type-safe JavaScript
+- **CSS3** - Modern styling with Fira Code font
+- **GitHub Actions** - Automated deployment
+
+## License
+
+MIT License - feel free to use this project as a template for your own ASCII animations!

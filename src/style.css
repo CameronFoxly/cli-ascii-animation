@@ -1,0 +1,125 @@
+:root {
+  font-family: 'Fira Code', monospace;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #ffffff;
+  background-color: rgb(49, 48, 58);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: rgb(49, 48, 58);
+}
+
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.terminal-container {
+  background-color: rgb(49, 48, 58);
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.terminal-screen {
+  font-family: 'Fira Code', monospace;
+  font-size: 14px;
+  color: rgb(156, 114, 219);
+  background-color: rgb(49, 48, 58);
+  white-space: pre;
+  line-height: 1.2;
+  border: none;
+  outline: none;
+  resize: none;
+  width: 100%;
+  overflow: hidden;
+  cursor: text;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.frame-controls {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.speed-control {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+button {
+  background-color: rgb(49, 48, 58);
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+button:active {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type="number"] {
+  background-color: rgb(49, 48, 58);
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  padding: 6px 8px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  width: 80px;
+  border-radius: 4px;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
+label {
+  color: #ffffff;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+}
+
+.frame-info {
+  color: #ffffff;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
