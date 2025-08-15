@@ -4,6 +4,7 @@
   font-weight: 400;
   color: #ffffff;
   background-color: rgb(49, 48, 58);
+  --terminal-font-size: clamp(6px, 1.5vw, 24px);
 }
 
 * {
@@ -40,7 +41,7 @@ body {
 
 .terminal-screen {
   font-family: 'Fira Code', monospace;
-  font-size: 12px; /* Will be dynamically adjusted */
+  font-size: var(--terminal-font-size); /* Use CSS variable for immediate sizing */
   color: rgb(156, 114, 219);
   background-color: rgb(49, 48, 58);
   white-space: pre;
@@ -52,6 +53,8 @@ body {
   overflow: hidden;
   cursor: text;
   box-sizing: border-box;
+  transition: opacity 0.15s ease-in;
+  opacity: 0; /* Hide until properly sized */
 }
 
 .controls {
@@ -85,6 +88,8 @@ button {
   font-size: 12px;
   border-radius: 4px;
   transition: all 0.2s;
+  min-width: 80px;
+  box-sizing: border-box;
 }
 
 button:hover {
@@ -98,6 +103,11 @@ button:active {
 button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.run-button {
+  min-width: 85px;
+  text-align: center;
 }
 
 input[type="number"] {
@@ -144,6 +154,11 @@ label {
   button {
     padding: 10px 12px;
     font-size: 11px;
+    min-width: 75px;
+  }
+  
+  .run-button {
+    min-width: 80px;
   }
 }
 
@@ -159,6 +174,11 @@ label {
   button {
     padding: 8px 10px;
     font-size: 10px;
+    min-width: 70px;
+  }
+  
+  .run-button {
+    min-width: 75px;
   }
   
   input[type="number"] {

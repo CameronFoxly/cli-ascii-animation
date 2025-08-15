@@ -44,10 +44,21 @@ class ASCIIAnimationPlayer {
     this.createUI();
     this.bindEvents();
     this.updateDisplay();
-    this.adjustFontSize();
     
-    // Adjust font size on window resize
-    window.addEventListener('resize', () => this.adjustFontSize());
+    // Size immediately and show the terminal
+    this.adjustFontSize();
+    this.terminalScreen.style.opacity = '1';
+    
+    // Smooth resize handler with RAF for optimal performance
+    let resizeTimer: number | null = null;
+    window.addEventListener('resize', () => {
+      if (resizeTimer) {
+        cancelAnimationFrame(resizeTimer);
+      }
+      resizeTimer = requestAnimationFrame(() => {
+        this.adjustFontSize();
+      });
+    });
   }
 
   private createUI(): void {
@@ -71,7 +82,7 @@ class ASCIIAnimationPlayer {
       <div class="controls">
         <div class="frame-controls">
           <button id="prev-btn">◀ Prev</button>
-          <button id="run-btn">▶ Run</button>
+          <button id="run-btn" class="run-button">▶ Run</button>
           <button id="next-btn">Next ▶</button>
         </div>
         
@@ -169,18 +180,27 @@ class ASCIIAnimationPlayer {
   }
 
   private adjustFontSize(): void {
-    // Calculate the optimal font size to fit 80 characters in the container width
     const container = this.terminalScreen.parentElement;
     if (!container) return;
     
-    const containerWidth = container.clientWidth - 20; // Account for padding
+    // Get the available width (container minus padding)
+    const availableWidth = container.clientWidth - 20;
+    if (availableWidth <= 0) return;
+    
+    // Simple calculation based on character width
+    // Fira Code is approximately 0.6em wide per character
     const targetChars = 80;
+    let optimalSize = availableWidth / (targetChars * 0.6);
     
-    // Start with a reasonable font size and adjust
-    let fontSize = Math.floor(containerWidth / (targetChars * 0.6)); // 0.6 is approximate char width ratio
-    fontSize = Math.max(6, Math.min(fontSize, 16)); // Clamp between 6px and 16px
+    // Clamp between min and max
+    optimalSize = Math.max(6, Math.min(optimalSize, 24));
     
-    this.terminalScreen.style.fontSize = fontSize + 'px';
+    // Round to prevent sub-pixel rendering issues
+    optimalSize = Math.round(optimalSize * 10) / 10;
+    
+    // Apply the font size to both CSS variable and element
+    document.documentElement.style.setProperty('--terminal-font-size', optimalSize + 'px');
+    this.terminalScreen.style.fontSize = optimalSize + 'px';
   }
 }
 
