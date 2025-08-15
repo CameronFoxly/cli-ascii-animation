@@ -27,6 +27,37 @@ body {
   box-sizing: border-box;
 }
 
+.animation-selector {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.animation-selector label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.animation-selector select {
+  background-color: rgb(49, 48, 58);
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  padding: 6px 12px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.animation-selector select:focus {
+  outline: none;
+  border-color: rgb(156, 114, 219);
+}
+
 .terminal-screen {
   font-family: 'Fira Code', monospace;
   /* Calculate font size based on content width (70 chars) plus some margin */

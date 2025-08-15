@@ -1,13 +1,15 @@
 import './style.css'
-import { AnimationFrames } from './animation-frames'
+import { AnimationRegistry, AnimationFrames } from './animation-registry'
 
-// Initialize the animation frames component
-const animationFrames = new AnimationFrames();
+// Initialize the animation registry
+const animationRegistry = new AnimationRegistry();
+let currentAnimationFrames: AnimationFrames | null = null;
 
 class ASCIIAnimationPlayer {
   private currentFrame: number = 0;
   private isPlaying: boolean = false;
   private animationTimeout: number | null = null;
+  private currentAnimationId: string = '';
 
   private terminalScreen!: HTMLTextAreaElement;
   private runButton!: HTMLButtonElement;
@@ -15,8 +17,25 @@ class ASCIIAnimationPlayer {
   private nextButton!: HTMLButtonElement;
   private frameDurationInput!: HTMLInputElement;
   private frameInfo!: HTMLInputElement;
+  private animationSelector!: HTMLSelectElement;
 
   constructor() {
+    this.initializeApp();
+  }
+
+  private async initializeApp(): Promise<void> {
+    // Load all animations first
+    await animationRegistry.loadAnimations();
+    
+    // Set up the default animation
+    this.currentAnimationId = animationRegistry.getDefaultAnimationId();
+    currentAnimationFrames = animationRegistry.createAnimationFrames(this.currentAnimationId) || null;
+    
+    if (!currentAnimationFrames) {
+      console.error('Failed to load default animation');
+      return;
+    }
+
     this.createUI();
     this.bindEvents();
     this.updateDisplay();
@@ -30,13 +49,30 @@ class ASCIIAnimationPlayer {
   private createUI(): void {
     const app = document.querySelector<HTMLDivElement>('#app')!;
     
+    // Calculate dimensions for the current animation
+    const dimensions = currentAnimationFrames!.getMaxDimensions();
+    const rows = Math.max(17, dimensions.maxHeight + 2); // Add some padding
+    const cols = Math.max(80, dimensions.maxWidth + 4); // Add some padding
+    
+    // Generate animation options for the dropdown
+    const animationOptions = animationRegistry.getAnimationMetadata()
+      .map(meta => `<option value="${meta.id}" ${meta.id === this.currentAnimationId ? 'selected' : ''}>${meta.name}</option>`)
+      .join('');
+    
     app.innerHTML = `
+      <div class="animation-selector">
+        <label for="animation-select">Animation:</label>
+        <select id="animation-select">
+          ${animationOptions}
+        </select>
+      </div>
+      
       <textarea 
         id="terminal-screen" 
         class="terminal-screen" 
         readonly
-        rows="17" 
-        cols="80"
+        rows="${rows}" 
+        cols="${cols}"
       ></textarea>
       
       <div class="controls">
@@ -50,7 +86,7 @@ class ASCIIAnimationPlayer {
           <div class="frame-info">
             <label for="current-frame">Frame:</label>
             <input type="text" id="current-frame" readonly value="1">
-            <span>/ ${animationFrames.getFrameCount()}</span>
+            <span>/ ${currentAnimationFrames!.getFrameCount()}</span>
           </div>
           
           <div class="speed-control">
@@ -68,6 +104,7 @@ class ASCIIAnimationPlayer {
     this.nextButton = document.getElementById('next-btn') as HTMLButtonElement;
     this.frameDurationInput = document.getElementById('frame-duration') as HTMLInputElement;
     this.frameInfo = document.getElementById('current-frame') as HTMLInputElement;
+    this.animationSelector = document.getElementById('animation-select') as HTMLSelectElement;
   }
 
   private bindEvents(): void {
@@ -75,18 +112,61 @@ class ASCIIAnimationPlayer {
     this.prevButton.addEventListener('click', () => this.previousFrame());
     this.nextButton.addEventListener('click', () => this.nextFrame());
     this.frameDurationInput.addEventListener('change', () => this.updateCurrentFrameDuration());
+    this.animationSelector.addEventListener('change', () => this.changeAnimation());
+  }
+
+  private async changeAnimation(): Promise<void> {
+    // Stop current animation if playing
+    if (this.isPlaying) {
+      this.stopAnimation();
+    }
+
+    // Switch to new animation
+    this.currentAnimationId = this.animationSelector.value;
+    currentAnimationFrames = animationRegistry.createAnimationFrames(this.currentAnimationId) || null;
+    
+    if (!currentAnimationFrames) {
+      console.error(`Failed to load animation: ${this.currentAnimationId}`);
+      return;
+    }
+
+    // Reset to first frame
+    this.currentFrame = 0;
+    
+    // Update the UI dimensions and content
+    this.updateTerminalDimensions();
+    this.updateFrameCount();
+    this.updateDisplay();
+  }
+
+  private updateTerminalDimensions(): void {
+    const dimensions = currentAnimationFrames!.getMaxDimensions();
+    const rows = Math.max(17, dimensions.maxHeight + 2);
+    const cols = Math.max(80, dimensions.maxWidth + 4);
+    
+    this.terminalScreen.rows = rows;
+    this.terminalScreen.cols = cols;
+  }
+
+  private updateFrameCount(): void {
+    const frameCountSpan = document.querySelector('.frame-info span');
+    if (frameCountSpan) {
+      frameCountSpan.textContent = `/ ${currentAnimationFrames!.getFrameCount()}`;
+    }
   }
 
   private updateDisplay(): void {
-    this.terminalScreen.value = animationFrames.getFrameText(this.currentFrame);
+    if (!currentAnimationFrames) return;
+    
+    this.terminalScreen.value = currentAnimationFrames.getFrameText(this.currentFrame);
     this.frameInfo.value = (this.currentFrame + 1).toString();
     
     // Update the duration input to show the current frame's duration
-    this.frameDurationInput.value = animationFrames.getFrameDuration(this.currentFrame).toString();
+    this.frameDurationInput.value = currentAnimationFrames.getFrameDuration(this.currentFrame).toString();
     
     // Update button states
     this.prevButton.disabled = this.currentFrame === 0;
-    this.nextButton.disabled = this.currentFrame === animationFrames.getFrameCount() - 1;
+    this.nextButton.disabled = this.currentFrame === currentAnimationFrames.getFrameCount() - 1;
   }
 
   private toggleAnimation(): void {
@@ -105,12 +185,12 @@ class ASCIIAnimationPlayer {
   }
 
   private scheduleNextFrame(): void {
-    if (!this.isPlaying) return;
+    if (!this.isPlaying || !currentAnimationFrames) return;
     
     this.updateDisplay();
     
-    if (this.currentFrame < animationFrames.getFrameCount() - 1) {
-      const currentFrameDuration = animationFrames.getFrameDuration(this.currentFrame);
+    if (this.currentFrame < currentAnimationFrames.getFrameCount() - 1) {
+      const currentFrameDuration = currentAnimationFrames.getFrameDuration(this.currentFrame);
       this.animationTimeout = window.setTimeout(() => {
         this.currentFrame++;
         this.scheduleNextFrame();
@@ -141,19 +221,22 @@ class ASCIIAnimationPlayer {
   }
 
   private nextFrame(): void {
-    if (this.currentFrame < animationFrames.getFrameCount() - 1) {
+    if (!currentAnimationFrames) return;
+    
+    if (this.currentFrame < currentAnimationFrames.getFrameCount() - 1) {
       this.currentFrame++;
       this.updateDisplay();
     }
   }
 
   private updateCurrentFrameDuration(): void {
+    if (!currentAnimationFrames) return;
+    
     const newDuration = parseInt(this.frameDurationInput.value);
-    animationFrames.setFrameDuration(this.currentFrame, newDuration);
+    currentAnimationFrames.setFrameDuration(this.currentFrame, newDuration);
     
     // No need to restart animation as the new duration will be used for the next frame
   }
-
 }
 
 // Initialize the application
