@@ -29,26 +29,27 @@ body {
 
 .terminal-screen {
   font-family: 'Fira Code', monospace;
-  /* More accurate scaling: account for app padding (4rem total = ~64px) and precise character width */
-  /* Available width = 100vw - 64px, divided by 80 chars * 0.6 char width ratio */
-  font-size: min(12.5px, calc((100vw - 64px) / 48));
+  /* Calculate font size based on content width (70 chars) plus some margin */
+  font-size: min(14px, calc((100vw - 64px) / 50));
   color: rgb(156, 114, 219);
   background-color: rgb(49, 48, 58);
   border: none;
   border-radius: 0;
   padding: 0;
-  margin-bottom: 30px;
+  margin: 0 auto 30px auto; /* Center horizontally with auto margins */
   white-space: pre;
   line-height: 1.2;
   outline: none;
   resize: none;
-  width: 100%;
-  max-width: 100%;
+  /* Set width to fit content - approximately 70 characters */
+  width: 70ch; /* Use character units for precise sizing */
+  max-width: calc(100vw - 32px); /* Prevent overflow on small screens */
   overflow: hidden;
   cursor: text;
   box-sizing: border-box;
   transition: opacity 0.15s ease-in;
   opacity: 0; /* Hide until ready */
+  display: block; /* Ensure it's a block element for centering */
 }
 
 .controls {
@@ -163,6 +164,12 @@ label {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  .terminal-screen {
+    font-size: min(12px, calc((100vw - 32px) / 50));
+    width: 70ch;
+    max-width: calc(100vw - 32px);
+  }
+  
   .bottom-controls {
     flex-direction: column;
     gap: 15px;
@@ -189,7 +196,9 @@ label {
 @media (max-width: 480px) {
   .terminal-screen {
     /* More aggressive scaling for very small screens */
-    font-size: min(12.5px, calc((100vw - 16px) / 48));
+    font-size: min(10px, calc((100vw - 16px) / 50));
+    width: 70ch; /* Keep character-based width */
+    max-width: calc(100vw - 16px); /* Tighter margins on very small screens */
   }
   
   #app {
