@@ -56,7 +56,7 @@ class ASCIIAnimationPlayer {
     // Calculate dimensions for the current animation
     const dimensions = currentAnimationFrames!.getMaxDimensions();
     const rows = Math.max(17, dimensions.maxHeight + 2); // Add some padding
-    const cols = Math.max(80, dimensions.maxWidth + 4); // Add some padding
+    const cols = 80; // Fixed width for consistent terminal display
     
     // Generate animation options for the dropdown
     const animationOptions = animationRegistry.getAnimationMetadata()
@@ -158,7 +158,7 @@ class ASCIIAnimationPlayer {
   private updateTerminalDimensions(): void {
     const dimensions = currentAnimationFrames!.getMaxDimensions();
     const rows = Math.max(17, dimensions.maxHeight + 2);
-    const cols = Math.max(80, dimensions.maxWidth + 4);
+    const cols = 80; // Fixed width for consistent terminal display
     
     this.terminalScreen.rows = rows;
     this.terminalScreen.cols = cols;

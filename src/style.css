@@ -60,8 +60,8 @@ body {
 
 .terminal-screen {
   font-family: 'Fira Code', monospace;
-  /* Calculate font size based on content width (70 chars) plus some margin */
-  font-size: min(14px, calc((100vw - 64px) / 50));
+  /* Calculate font size based on content width (80 chars) plus some margin */
+  font-size: min(14px, calc((100vw - 64px) / 60));
   color: rgb(156, 114, 219);
   background-color: rgb(49, 48, 58);
   border: none;
@@ -72,8 +72,8 @@ body {
   line-height: 1.2;
   outline: none;
   resize: none;
-  /* Set width to fit content - approximately 70 characters */
-  width: 70ch; /* Use character units for precise sizing */
+  /* Set width to fit content - exactly 80 characters */
+  width: 80ch; /* Use character units for precise sizing */
   max-width: calc(100vw - 32px); /* Prevent overflow on small screens */
   overflow: hidden;
   cursor: text;
@@ -215,8 +215,8 @@ label {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .terminal-screen {
-    font-size: min(12px, calc((100vw - 32px) / 50));
-    width: 70ch;
+    font-size: min(12px, calc((100vw - 32px) / 60));
+    width: 80ch;
     max-width: calc(100vw - 32px);
   }
   
