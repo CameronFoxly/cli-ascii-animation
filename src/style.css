@@ -4,7 +4,6 @@
   font-weight: 400;
   color: #ffffff;
   background-color: rgb(49, 48, 58);
-  --terminal-font-size: clamp(6px, 1.5vw, 24px);
 }
 
 * {
@@ -41,7 +40,7 @@ body {
 
 .terminal-screen {
   font-family: 'Fira Code', monospace;
-  font-size: var(--terminal-font-size); /* Use CSS variable for immediate sizing */
+  font-size: 16px; /* Default size, will be overridden by JS */
   color: rgb(156, 114, 219);
   background-color: rgb(49, 48, 58);
   white-space: pre;

@@ -49,16 +49,23 @@ class ASCIIAnimationPlayer {
     this.adjustFontSize();
     this.terminalScreen.style.opacity = '1';
     
-    // Smooth resize handler with RAF for optimal performance
+    // Improved resize handler with debouncing and proper cleanup
     let resizeTimer: number | null = null;
-    window.addEventListener('resize', () => {
+    const handleResize = () => {
       if (resizeTimer) {
-        cancelAnimationFrame(resizeTimer);
+        clearTimeout(resizeTimer);
       }
-      resizeTimer = requestAnimationFrame(() => {
-        this.adjustFontSize();
-      });
-    });
+      resizeTimer = window.setTimeout(() => {
+        // Force a recalculation by temporarily clearing the font size
+        this.terminalScreen.style.removeProperty('font-size');
+        // Use RAF to ensure DOM updates are complete
+        requestAnimationFrame(() => {
+          this.adjustFontSize();
+        });
+      }, 50); // 50ms debounce to prevent excessive calls
+    };
+    
+    window.addEventListener('resize', handleResize);
   }
 
   private createUI(): void {
@@ -183,8 +190,18 @@ class ASCIIAnimationPlayer {
     const container = this.terminalScreen.parentElement;
     if (!container) return;
     
+    // Force a layout recalculation to get accurate measurements
+    container.offsetHeight; // Trigger layout
+    
     // Get the available width (container minus padding)
-    const availableWidth = container.clientWidth - 20;
+    // Use getBoundingClientRect for more accurate measurements
+    const containerRect = container.getBoundingClientRect();
+    const computedStyle = window.getComputedStyle(container);
+    const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
+    const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
+    
+    const availableWidth = containerRect.width - paddingLeft - paddingRight;
+    
     if (availableWidth <= 0) return;
     
     // Simple calculation based on character width
@@ -198,9 +215,8 @@ class ASCIIAnimationPlayer {
     // Round to prevent sub-pixel rendering issues
     optimalSize = Math.round(optimalSize * 10) / 10;
     
-    // Apply the font size to both CSS variable and element
-    document.documentElement.style.setProperty('--terminal-font-size', optimalSize + 'px');
-    this.terminalScreen.style.fontSize = optimalSize + 'px';
+    // Force override any CSS by using !important
+    this.terminalScreen.style.setProperty('font-size', optimalSize + 'px', 'important');
   }
 }
 
