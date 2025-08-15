@@ -96,7 +96,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 04",
-      duration: 80,
+      duration: 60,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to          ▄▄██████████▄                                ╚╗
@@ -116,7 +116,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 05",
-      duration: 90,
+      duration: 70,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                    ▄██████████▄                       ╚╗
@@ -136,7 +136,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 06",
-      duration: 100,
+      duration: 80,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                            ▄███████████▄              ╚╗
@@ -156,7 +156,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 07",
-      duration: 100,
+      duration: 90,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                                ▄████████████▄         ╚╗
@@ -246,13 +246,13 @@ export class AnimationFrames {
   }
 
   /**
-   * Get the display text for a frame (title + content)
+   * Get the display text for a frame (content only)
    * @param index - The frame index (0-based)
-   * @returns The formatted frame text or empty string if index is out of bounds
+   * @returns The frame content or empty string if index is out of bounds
    */
   public getFrameText(index: number): string {
     const frame = this.getFrame(index);
-    return frame ? `${frame.title}:${frame.content}` : '';
+    return frame ? frame.content : '';
   }
 
   /**

@@ -35,7 +35,7 @@ class ASCIIAnimationPlayer {
         id="terminal-screen" 
         class="terminal-screen" 
         readonly
-        rows="15" 
+        rows="17" 
         cols="80"
       ></textarea>
       
@@ -46,15 +46,17 @@ class ASCIIAnimationPlayer {
           <button id="next-btn">Next ▶</button>
         </div>
         
-        <div class="frame-info">
-          <label for="current-frame">Frame:</label>
-          <input type="text" id="current-frame" readonly value="1">
-          <span>/ ${animationFrames.getFrameCount()}</span>
-        </div>
-        
-        <div class="speed-control">
-          <label for="frame-duration">Frame Duration (ms):</label>
-          <input type="number" id="frame-duration" value="100" min="50" max="2000" step="50">
+        <div class="bottom-controls">
+          <div class="frame-info">
+            <label for="current-frame">Frame:</label>
+            <input type="text" id="current-frame" readonly value="1">
+            <span>/ ${animationFrames.getFrameCount()}</span>
+          </div>
+          
+          <div class="speed-control">
+            <label for="frame-duration">Frame Duration (ms):</label>
+            <input type="number" id="frame-duration" value="100" min="50" max="2000" step="50">
+          </div>
         </div>
       </div>
     `;
