@@ -59,15 +59,13 @@ class ASCIIAnimationPlayer {
         Frame <span id="current-frame">1</span> of ${animationFrames.length}
       </div>
       
-      <div class="terminal-container">
-        <textarea 
-          id="terminal-screen" 
-          class="terminal-screen" 
-          readonly
-          rows="15" 
-          cols="80"
-        ></textarea>
-      </div>
+      <textarea 
+        id="terminal-screen" 
+        class="terminal-screen" 
+        readonly
+        rows="15" 
+        cols="80"
+      ></textarea>
       
       <div class="controls">
         <div class="frame-controls">

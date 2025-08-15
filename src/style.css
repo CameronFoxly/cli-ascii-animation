@@ -27,29 +27,23 @@ body {
   box-sizing: border-box;
 }
 
-.terminal-container {
-  background-color: rgb(49, 48, 58);
-  border: 1px solid #ffffff;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 20px;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
 .terminal-screen {
   font-family: 'Fira Code', monospace;
-  /* Start at 12.5px maximum, then scale down based on viewport width with no minimum */
-  font-size: min(12.5px, 1.25vw);
+  /* More accurate scaling: account for app padding (2rem = ~32px) and precise character width */
+  /* Available width = 100vw - 32px, divided by 80 chars * 0.6 char width ratio */
+  font-size: min(12.5px, calc((100vw - 32px) / 48));
   color: rgb(156, 114, 219);
   background-color: rgb(49, 48, 58);
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 20px;
   white-space: pre;
   line-height: 1.2;
-  border: none;
   outline: none;
   resize: none;
   width: 100%;
+  max-width: 100%;
   overflow: hidden;
   cursor: text;
   box-sizing: border-box;
@@ -163,8 +157,9 @@ label {
 }
 
 @media (max-width: 480px) {
-  .terminal-container {
-    padding: 5px;
+  .terminal-screen {
+    /* More aggressive scaling for very small screens */
+    font-size: min(12.5px, calc((100vw - 16px) / 48));
   }
   
   #app {
