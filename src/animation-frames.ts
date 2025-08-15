@@ -9,12 +9,14 @@
 export interface AnimationFrame {
   title: string;
   content: string;
+  duration: number; // Duration in milliseconds for this frame
 }
 
 export class AnimationFrames {
   private frames: AnimationFrame[] = [
     {
       title: "Frame 00",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝                                                                  ╚╗
@@ -34,6 +36,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 01",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝▄                                                                 ╚╗
@@ -53,6 +56,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 02",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝▄██████████▄                                                      ╚╗
@@ -72,6 +76,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 03",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to ▄▄██████████▄                                         ╚╗
@@ -91,6 +96,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 04",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to          ▄▄██████████▄                                ╚╗
@@ -110,6 +116,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 05",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                    ▄██████████▄                       ╚╗
@@ -129,6 +136,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 06",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                            ▄███████████▄              ╚╗
@@ -148,6 +156,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 07",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                                ▄████████████▄         ╚╗
@@ -167,6 +176,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 08",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                                    ▄███████▄          ╚╗
@@ -186,6 +196,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 09",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                                    ▄███████▄          ╚╗
@@ -205,6 +216,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 10",
+      duration: 100,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                                    ▄███████▄          ╚╗
@@ -300,5 +312,31 @@ export class AnimationFrames {
    */
   public getFrameTitles(): string[] {
     return this.frames.map(frame => frame.title);
+  }
+
+  /**
+   * Get the duration of a specific frame
+   * @param index - The frame index
+   * @returns The duration in milliseconds, or 100 if index is out of bounds
+   */
+  public getFrameDuration(index: number): number {
+    if (index >= 0 && index < this.frames.length) {
+      return this.frames[index].duration;
+    }
+    return 100; // default fallback
+  }
+
+  /**
+   * Set the duration of a specific frame
+   * @param index - The frame index
+   * @param duration - The new duration in milliseconds
+   * @returns True if the duration was set, false if index was out of bounds
+   */
+  public setFrameDuration(index: number, duration: number): boolean {
+    if (index >= 0 && index < this.frames.length) {
+      this.frames[index].duration = duration;
+      return true;
+    }
+    return false;
   }
 }

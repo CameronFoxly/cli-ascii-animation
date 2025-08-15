@@ -7,14 +7,13 @@ const animationFrames = new AnimationFrames();
 class ASCIIAnimationPlayer {
   private currentFrame: number = 0;
   private isPlaying: boolean = false;
-  private animationInterval: number | null = null;
-  private frameRate: number = 100; // milliseconds per frame
+  private animationTimeout: number | null = null;
 
   private terminalScreen!: HTMLTextAreaElement;
   private runButton!: HTMLButtonElement;
   private prevButton!: HTMLButtonElement;
   private nextButton!: HTMLButtonElement;
-  private frameRateInput!: HTMLInputElement;
+  private frameDurationInput!: HTMLInputElement;
   private frameInfo!: HTMLInputElement;
 
   constructor() {
@@ -54,8 +53,8 @@ class ASCIIAnimationPlayer {
         </div>
         
         <div class="speed-control">
-          <label for="frame-rate">Frame Rate (ms):</label>
-          <input type="number" id="frame-rate" value="100" min="50" max="2000" step="50">
+          <label for="frame-duration">Frame Duration (ms):</label>
+          <input type="number" id="frame-duration" value="100" min="50" max="2000" step="50">
         </div>
       </div>
     `;
@@ -65,7 +64,7 @@ class ASCIIAnimationPlayer {
     this.runButton = document.getElementById('run-btn') as HTMLButtonElement;
     this.prevButton = document.getElementById('prev-btn') as HTMLButtonElement;
     this.nextButton = document.getElementById('next-btn') as HTMLButtonElement;
-    this.frameRateInput = document.getElementById('frame-rate') as HTMLInputElement;
+    this.frameDurationInput = document.getElementById('frame-duration') as HTMLInputElement;
     this.frameInfo = document.getElementById('current-frame') as HTMLInputElement;
   }
 
@@ -73,12 +72,15 @@ class ASCIIAnimationPlayer {
     this.runButton.addEventListener('click', () => this.toggleAnimation());
     this.prevButton.addEventListener('click', () => this.previousFrame());
     this.nextButton.addEventListener('click', () => this.nextFrame());
-    this.frameRateInput.addEventListener('change', () => this.updateFrameRate());
+    this.frameDurationInput.addEventListener('change', () => this.updateCurrentFrameDuration());
   }
 
   private updateDisplay(): void {
     this.terminalScreen.value = animationFrames.getFrameText(this.currentFrame);
     this.frameInfo.value = (this.currentFrame + 1).toString();
+    
+    // Update the duration input to show the current frame's duration
+    this.frameDurationInput.value = animationFrames.getFrameDuration(this.currentFrame).toString();
     
     // Update button states
     this.prevButton.disabled = this.currentFrame === 0;
@@ -97,26 +99,33 @@ class ASCIIAnimationPlayer {
     this.isPlaying = true;
     this.runButton.textContent = '⏸ Stop';
     this.currentFrame = 0; // Start from beginning
+    this.scheduleNextFrame();
+  }
+
+  private scheduleNextFrame(): void {
+    if (!this.isPlaying) return;
     
-    this.animationInterval = window.setInterval(() => {
-      this.updateDisplay();
-      
-      if (this.currentFrame < animationFrames.getFrameCount() - 1) {
+    this.updateDisplay();
+    
+    if (this.currentFrame < animationFrames.getFrameCount() - 1) {
+      const currentFrameDuration = animationFrames.getFrameDuration(this.currentFrame);
+      this.animationTimeout = window.setTimeout(() => {
         this.currentFrame++;
-      } else {
-        // Animation complete, stop and hold on last frame
-        this.stopAnimation();
-      }
-    }, this.frameRate);
+        this.scheduleNextFrame();
+      }, currentFrameDuration);
+    } else {
+      // Animation complete, stop and hold on last frame
+      this.stopAnimation();
+    }
   }
 
   private stopAnimation(): void {
     this.isPlaying = false;
     this.runButton.textContent = '▶ Run';
     
-    if (this.animationInterval) {
-      clearInterval(this.animationInterval);
-      this.animationInterval = null;
+    if (this.animationTimeout) {
+      clearTimeout(this.animationTimeout);
+      this.animationTimeout = null;
     }
     
     this.updateDisplay();
@@ -136,14 +145,11 @@ class ASCIIAnimationPlayer {
     }
   }
 
-  private updateFrameRate(): void {
-    this.frameRate = parseInt(this.frameRateInput.value);
+  private updateCurrentFrameDuration(): void {
+    const newDuration = parseInt(this.frameDurationInput.value);
+    animationFrames.setFrameDuration(this.currentFrame, newDuration);
     
-    // If animation is playing, restart with new frame rate
-    if (this.isPlaying) {
-      this.stopAnimation();
-      this.startAnimation();
-    }
+    // No need to restart animation as the new duration will be used for the next frame
   }
 
 }
