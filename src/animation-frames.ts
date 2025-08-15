@@ -176,7 +176,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 08",
-      duration: 800,
+      duration: 500,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                                    ▄███████▄          ╚╗
