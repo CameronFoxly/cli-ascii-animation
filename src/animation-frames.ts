@@ -16,7 +16,7 @@ export class AnimationFrames {
   private frames: AnimationFrame[] = [
     {
       title: "Frame 00",
-      duration: 100,
+      duration: 50,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝                                                                  ╚╗
@@ -36,7 +36,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 01",
-      duration: 100,
+      duration: 50,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝▄                                                                 ╚╗
@@ -56,7 +56,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 02",
-      duration: 100,
+      duration: 50,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝▄██████████▄                                                      ╚╗
@@ -76,7 +76,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 03",
-      duration: 100,
+      duration: 50,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to ▄▄██████████▄                                         ╚╗
@@ -96,7 +96,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 04",
-      duration: 100,
+      duration: 80,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to          ▄▄██████████▄                                ╚╗
@@ -116,7 +116,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 05",
-      duration: 100,
+      duration: 90,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                    ▄██████████▄                       ╚╗
@@ -176,7 +176,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 08",
-      duration: 100,
+      duration: 800,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                                    ▄███████▄          ╚╗
@@ -196,7 +196,7 @@ export class AnimationFrames {
     },
     {
       title: "Frame 09",
-      duration: 100,
+      duration: 80,
       content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                                    ▄███████▄          ╚╗
