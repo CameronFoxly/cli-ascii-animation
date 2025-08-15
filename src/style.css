@@ -13,17 +13,19 @@
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   min-width: 320px;
   min-height: 100vh;
   background-color: rgb(49, 48, 58);
+  padding: 20px;
 }
 
 #app {
   max-width: 100%;
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  text-align: center;
+  margin: 0;
+  padding: 0;
+  text-align: left;
   box-sizing: border-box;
 }
 
@@ -31,7 +33,7 @@ body {
   display: flex;
   gap: 10px;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   margin-bottom: 20px;
 }
 
@@ -67,28 +69,28 @@ body {
   border: none;
   border-radius: 0;
   padding: 0;
-  margin: 0 auto 30px auto; /* Center horizontally with auto margins */
+  margin: 0 0 30px 0; /* Left-aligned with bottom margin */
   white-space: pre;
   line-height: 1.2;
   outline: none;
   resize: none;
   /* Set width to fit content - exactly 80 characters */
   width: 80ch; /* Use character units for precise sizing */
-  max-width: calc(100vw - 32px); /* Prevent overflow on small screens */
+  max-width: calc(100vw - 40px); /* Account for 20px margin on each side */
   overflow: hidden;
   cursor: text;
   box-sizing: border-box;
   transition: opacity 0.15s ease-in;
   opacity: 0; /* Hide until ready */
-  display: block; /* Ensure it's a block element for centering */
+  display: block; /* Ensure it's a block element */
 }
 
 .controls {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
   margin-bottom: 20px;
 }
 
@@ -100,7 +102,7 @@ body {
 
 .loop-control {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -108,8 +110,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  justify-content: center;
-  align-items: center;
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .speed-control {
@@ -215,9 +217,9 @@ label {
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .terminal-screen {
-    font-size: min(12px, calc((100vw - 32px) / 60));
+    font-size: min(12px, calc((100vw - 40px) / 60));
     width: 80ch;
-    max-width: calc(100vw - 32px);
+    max-width: calc(100vw - 40px);
   }
   
   .bottom-controls {
@@ -227,7 +229,7 @@ label {
   
   .frame-controls {
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: flex-start;
   }
   
   button {

@@ -265,7 +265,7 @@ const frames: AnimationFrame[] = [
 const animation: Animation = {
   metadata: {
     id: 'animation-02',
-    name: 'UI Corner Box Reveal',
+    name: 'No Icon Centered',
     description: 'Game-style UI with corner accents with eased slides'
   },
   frames

@@ -242,8 +242,8 @@ const frames: AnimationFrame[] = [
 const animation: Animation = {
   metadata: {
     id: 'animation-03',
-    name: 'GitHub Welcome',
-    description: 'GitHub Copilot welcome screen animation with logo reveal'
+    name: 'Small Icon',
+    description: 'GitHub Copilot welcome screen animation with logo reveal with smaller icon and less vertical space'
   },
   frames
 };
