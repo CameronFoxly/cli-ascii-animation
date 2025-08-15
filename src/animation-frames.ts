@@ -1,0 +1,311 @@
+/**
+ * ASCII Animation Frames Component
+ * 
+ * This module contains the ASCII animation frames and provides a clean interface
+ * for accessing them. Frames can be easily modified, added, or removed here
+ * without affecting the main application logic.
+ */
+
+export interface AnimationFrame {
+  title: string;
+  content: string;
+}
+
+export class AnimationFrames {
+  private frames: AnimationFrame[] = [
+    {
+      title: "Frame 01",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                  [ • ]                                       ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 02",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                 [ • • ]                                     ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 03",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                                [ • • • ]                                    ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 04",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                               [ • • • • ]                                   ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 05",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                              [ • • • • • ]                                  ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 06",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                             [ • • • • • • ]                                 ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 07",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                            [ • • • • • • • ]                                ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 08",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                           [ • • • • • • • • ]                               ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 09",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                          [ • • • • • • • • • ]                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 10",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                         [ • • • • • • • • • • ]                             ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 11",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                        [ • • • • • • • • • • • ]                            ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    },
+    {
+      title: "Frame 12",
+      content: `
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                       [ • • • • • • • • • • • • ]                           ║
+║                              ANIMATION COMPLETE                             ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+║                                                                              ║
+╚══════════════════════════════════════════════════════════════════════════════╝`
+    }
+  ];
+
+  /**
+   * Get a frame by index
+   * @param index - The frame index (0-based)
+   * @returns The frame object or undefined if index is out of bounds
+   */
+  public getFrame(index: number): AnimationFrame | undefined {
+    return this.frames[index];
+  }
+
+  /**
+   * Get the display text for a frame (title + content)
+   * @param index - The frame index (0-based)
+   * @returns The formatted frame text or empty string if index is out of bounds
+   */
+  public getFrameText(index: number): string {
+    const frame = this.getFrame(index);
+    return frame ? `${frame.title}:${frame.content}` : '';
+  }
+
+  /**
+   * Get the total number of frames
+   * @returns The total frame count
+   */
+  public getFrameCount(): number {
+    return this.frames.length;
+  }
+
+  /**
+   * Get all frames as an array of display text (for backward compatibility)
+   * @returns Array of formatted frame strings
+   */
+  public getAllFramesAsText(): string[] {
+    return this.frames.map((_, index) => this.getFrameText(index));
+  }
+
+  /**
+   * Add a new frame to the animation
+   * @param frame - The frame to add
+   */
+  public addFrame(frame: AnimationFrame): void {
+    this.frames.push(frame);
+  }
+
+  /**
+   * Remove a frame by index
+   * @param index - The frame index to remove
+   * @returns True if the frame was removed, false if index was out of bounds
+   */
+  public removeFrame(index: number): boolean {
+    if (index >= 0 && index < this.frames.length) {
+      this.frames.splice(index, 1);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Update a frame at a specific index
+   * @param index - The frame index to update
+   * @param frame - The new frame data
+   * @returns True if the frame was updated, false if index was out of bounds
+   */
+  public updateFrame(index: number, frame: AnimationFrame): boolean {
+    if (index >= 0 && index < this.frames.length) {
+      this.frames[index] = frame;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Get all frame titles
+   * @returns Array of frame titles
+   */
+  public getFrameTitles(): string[] {
+    return this.frames.map(frame => frame.title);
+  }
+}

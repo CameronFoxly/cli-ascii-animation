@@ -72,16 +72,24 @@ This project is configured for automatic deployment to GitHub Pages via GitHub A
 
 ## Customizing the Animation
 
-To add your own ASCII animation frames, edit the `animationFrames` array in `src/main.ts`. Each frame should be a string representing the ASCII art for that frame.
+The ASCII animation frames are now organized in a separate, maintainable component. To modify the animations:
 
-Example:
+1. **Edit frames directly**: Open `src/animation-frames.ts` and modify the frames array
+2. **Use the API**: The `AnimationFrames` class provides methods to add, remove, and update frames programmatically
+
+Example of adding a new frame:
 ```typescript
-const animationFrames: string[] = [
-  "Your first frame ASCII art here...",
-  "Your second frame ASCII art here...",
-  // ... up to 12 frames
-];
+// In animation-frames.ts
+{
+  title: "Frame 13",
+  content: `
+╔══════════════════════════════════════╗
+║        Your ASCII art here...        ║
+╚══════════════════════════════════════╝`
+}
 ```
+
+For detailed documentation on the animation system, see [docs/animation-frames.md](docs/animation-frames.md).
 
 ## Color Scheme Customization
 

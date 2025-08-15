@@ -1,37 +1,14 @@
 import './style.css'
+import { AnimationFrames } from './animation-frames'
 
-// Placeholder ASCII animation frames (12 frames)
-const animationFrames: string[] = [
-  "Frame 01:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                                  [ • ]                                       ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 02:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                                 [ • • ]                                     ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 03:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                                [ • • • ]                                    ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 04:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                               [ • • • • ]                                   ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 05:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                              [ • • • • • ]                                  ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 06:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                             [ • • • • • • ]                                 ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 07:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                            [ • • • • • • • ]                                ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 08:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                           [ • • • • • • • • ]                               ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 09:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                          [ • • • • • • • • • ]                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 10:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                         [ • • • • • • • • • • ]                             ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 11:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                        [ • • • • • • • • • • • ]                            ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝",
-  
-  "Frame 12:\n╔══════════════════════════════════════════════════════════════════════════════╗\n║                       [ • • • • • • • • • • • • ]                           ║\n║                              ANIMATION COMPLETE                             ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n║                                                                              ║\n╚══════════════════════════════════════════════════════════════════════════════╝"
-];
+// Initialize the animation frames component
+const animationFrames = new AnimationFrames();
 
 class ASCIIAnimationPlayer {
   private currentFrame: number = 0;
   private isPlaying: boolean = false;
   private animationInterval: number | null = null;
-  private frameRate: number = 200; // milliseconds per frame
+  private frameRate: number = 100; // milliseconds per frame
 
   private terminalScreen!: HTMLTextAreaElement;
   private runButton!: HTMLButtonElement;
@@ -73,12 +50,12 @@ class ASCIIAnimationPlayer {
         <div class="frame-info">
           <label for="current-frame">Frame:</label>
           <input type="text" id="current-frame" readonly value="1">
-          <span>/ ${animationFrames.length}</span>
+          <span>/ ${animationFrames.getFrameCount()}</span>
         </div>
         
         <div class="speed-control">
           <label for="frame-rate">Frame Rate (ms):</label>
-          <input type="number" id="frame-rate" value="200" min="50" max="2000" step="50">
+          <input type="number" id="frame-rate" value="100" min="50" max="2000" step="50">
         </div>
       </div>
     `;
@@ -100,12 +77,12 @@ class ASCIIAnimationPlayer {
   }
 
   private updateDisplay(): void {
-    this.terminalScreen.value = animationFrames[this.currentFrame];
+    this.terminalScreen.value = animationFrames.getFrameText(this.currentFrame);
     this.frameInfo.value = (this.currentFrame + 1).toString();
     
     // Update button states
     this.prevButton.disabled = this.currentFrame === 0;
-    this.nextButton.disabled = this.currentFrame === animationFrames.length - 1;
+    this.nextButton.disabled = this.currentFrame === animationFrames.getFrameCount() - 1;
   }
 
   private toggleAnimation(): void {
@@ -124,7 +101,7 @@ class ASCIIAnimationPlayer {
     this.animationInterval = window.setInterval(() => {
       this.updateDisplay();
       
-      if (this.currentFrame < animationFrames.length - 1) {
+      if (this.currentFrame < animationFrames.getFrameCount() - 1) {
         this.currentFrame++;
       } else {
         // Animation complete, stop and hold on last frame
@@ -153,7 +130,7 @@ class ASCIIAnimationPlayer {
   }
 
   private nextFrame(): void {
-    if (this.currentFrame < animationFrames.length - 1) {
+    if (this.currentFrame < animationFrames.getFrameCount() - 1) {
       this.currentFrame++;
       this.updateDisplay();
     }
