@@ -7,6 +7,52 @@
 import type { Animation, AnimationFrame } from '../animation-registry';
 
 const frames: AnimationFrame[] = [
+        {
+    title: "Frame 0",
+    duration: 40,
+    content: `                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+`
+  },
+  {
+    title: "Frame 1",
+    duration: 40,
+    content: `                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                            █▀█                                                 
+                            █ █                                                 
+                            █▄█`
+  },
+        {
+    title: "Frame 0",
+    duration: 80,
+    content: `                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+`
+  },
+  {
+    title: "Frame 1",
+    duration: 40,
+    content: `                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                                                                                
+                            █▀█                                                 
+                            █ █                                                 
+                            █▄█`
+  },
     {
     title: "Frame 0",
     duration: 40,
