@@ -38,7 +38,7 @@ class ASCIIAnimationPlayer {
   private prevButton!: HTMLButtonElement;
   private nextButton!: HTMLButtonElement;
   private frameRateInput!: HTMLInputElement;
-  private frameInfo!: HTMLElement;
+  private frameInfo!: HTMLInputElement;
 
   constructor() {
     this.createUI();
@@ -55,10 +55,6 @@ class ASCIIAnimationPlayer {
     const app = document.querySelector<HTMLDivElement>('#app')!;
     
     app.innerHTML = `
-      <div class="frame-info">
-        Frame <span id="current-frame">1</span> of ${animationFrames.length}
-      </div>
-      
       <textarea 
         id="terminal-screen" 
         class="terminal-screen" 
@@ -74,6 +70,12 @@ class ASCIIAnimationPlayer {
           <button id="next-btn">Next ▶</button>
         </div>
         
+        <div class="frame-info">
+          <label for="current-frame">Frame:</label>
+          <input type="text" id="current-frame" readonly value="1">
+          <span>/ ${animationFrames.length}</span>
+        </div>
+        
         <div class="speed-control">
           <label for="frame-rate">Frame Rate (ms):</label>
           <input type="number" id="frame-rate" value="200" min="50" max="2000" step="50">
@@ -87,7 +89,7 @@ class ASCIIAnimationPlayer {
     this.prevButton = document.getElementById('prev-btn') as HTMLButtonElement;
     this.nextButton = document.getElementById('next-btn') as HTMLButtonElement;
     this.frameRateInput = document.getElementById('frame-rate') as HTMLInputElement;
-    this.frameInfo = document.getElementById('current-frame') as HTMLElement;
+    this.frameInfo = document.getElementById('current-frame') as HTMLInputElement;
   }
 
   private bindEvents(): void {
@@ -99,7 +101,7 @@ class ASCIIAnimationPlayer {
 
   private updateDisplay(): void {
     this.terminalScreen.value = animationFrames[this.currentFrame];
-    this.frameInfo.textContent = (this.currentFrame + 1).toString();
+    this.frameInfo.value = (this.currentFrame + 1).toString();
     
     // Update button states
     this.prevButton.disabled = this.currentFrame === 0;

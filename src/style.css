@@ -104,6 +104,29 @@ button:disabled {
   text-align: center;
 }
 
+.frame-info {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+input[type="text"] {
+  background-color: rgb(49, 48, 58);
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  padding: 6px 8px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  width: 40px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+}
+
 input[type="number"] {
   background-color: rgb(49, 48, 58);
   color: #ffffff;
@@ -124,13 +147,6 @@ label {
   color: #ffffff;
   font-family: 'Fira Code', monospace;
   font-size: 12px;
-}
-
-.frame-info {
-  color: #ffffff;
-  font-family: 'Fira Code', monospace;
-  font-size: 12px;
-  margin-bottom: 10px;
 }
 
 /* Responsive adjustments */
@@ -181,11 +197,12 @@ label {
     font-size: 10px;
   }
   
-  label {
+  input[type="text"] {
+    width: 30px;
     font-size: 10px;
   }
   
-  .frame-info {
+  label {
     font-size: 10px;
   }
 }
