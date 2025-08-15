@@ -8,6 +8,7 @@ let currentAnimationFrames: AnimationFrames | null = null;
 class ASCIIAnimationPlayer {
   private currentFrame: number = 0;
   private isPlaying: boolean = false;
+  private isLooping: boolean = false;
   private animationTimeout: number | null = null;
   private currentAnimationId: string = '';
 
@@ -15,6 +16,9 @@ class ASCIIAnimationPlayer {
   private runButton!: HTMLButtonElement;
   private prevButton!: HTMLButtonElement;
   private nextButton!: HTMLButtonElement;
+  private startButton!: HTMLButtonElement;
+  private endButton!: HTMLButtonElement;
+  private loopButton!: HTMLButtonElement;
   private frameDurationInput!: HTMLInputElement;
   private frameInfo!: HTMLInputElement;
   private animationSelector!: HTMLSelectElement;
@@ -77,9 +81,15 @@ class ASCIIAnimationPlayer {
       
       <div class="controls">
         <div class="frame-controls">
+          <button id="start-btn">⏮ Start</button>
           <button id="prev-btn">◀ Prev</button>
           <button id="run-btn" class="run-button">▶ Run</button>
           <button id="next-btn">Next ▶</button>
+          <button id="end-btn">End ⏭</button>
+        </div>
+        
+        <div class="loop-control">
+          <button id="loop-btn" class="loop-button">🔄 Loop: OFF</button>
         </div>
         
         <div class="bottom-controls">
@@ -102,6 +112,9 @@ class ASCIIAnimationPlayer {
     this.runButton = document.getElementById('run-btn') as HTMLButtonElement;
     this.prevButton = document.getElementById('prev-btn') as HTMLButtonElement;
     this.nextButton = document.getElementById('next-btn') as HTMLButtonElement;
+    this.startButton = document.getElementById('start-btn') as HTMLButtonElement;
+    this.endButton = document.getElementById('end-btn') as HTMLButtonElement;
+    this.loopButton = document.getElementById('loop-btn') as HTMLButtonElement;
     this.frameDurationInput = document.getElementById('frame-duration') as HTMLInputElement;
     this.frameInfo = document.getElementById('current-frame') as HTMLInputElement;
     this.animationSelector = document.getElementById('animation-select') as HTMLSelectElement;
@@ -111,6 +124,9 @@ class ASCIIAnimationPlayer {
     this.runButton.addEventListener('click', () => this.toggleAnimation());
     this.prevButton.addEventListener('click', () => this.previousFrame());
     this.nextButton.addEventListener('click', () => this.nextFrame());
+    this.startButton.addEventListener('click', () => this.goToStart());
+    this.endButton.addEventListener('click', () => this.goToEnd());
+    this.loopButton.addEventListener('click', () => this.toggleLoop());
     this.frameDurationInput.addEventListener('change', () => this.updateCurrentFrameDuration());
     this.animationSelector.addEventListener('change', () => this.changeAnimation());
   }
@@ -196,8 +212,18 @@ class ASCIIAnimationPlayer {
         this.scheduleNextFrame();
       }, currentFrameDuration);
     } else {
-      // Animation complete, stop and hold on last frame
-      this.stopAnimation();
+      // Animation reached the end
+      if (this.isLooping) {
+        // Loop back to the beginning
+        const currentFrameDuration = currentAnimationFrames.getFrameDuration(this.currentFrame);
+        this.animationTimeout = window.setTimeout(() => {
+          this.currentFrame = 0;
+          this.scheduleNextFrame();
+        }, currentFrameDuration);
+      } else {
+        // Animation complete, stop and hold on last frame
+        this.stopAnimation();
+      }
     }
   }
 
@@ -236,6 +262,30 @@ class ASCIIAnimationPlayer {
     currentAnimationFrames.setFrameDuration(this.currentFrame, newDuration);
     
     // No need to restart animation as the new duration will be used for the next frame
+  }
+
+  private goToStart(): void {
+    if (this.isPlaying) {
+      this.stopAnimation();
+    }
+    this.currentFrame = 0;
+    this.updateDisplay();
+  }
+
+  private goToEnd(): void {
+    if (!currentAnimationFrames) return;
+    
+    if (this.isPlaying) {
+      this.stopAnimation();
+    }
+    this.currentFrame = currentAnimationFrames.getFrameCount() - 1;
+    this.updateDisplay();
+  }
+
+  private toggleLoop(): void {
+    this.isLooping = !this.isLooping;
+    this.loopButton.textContent = this.isLooping ? '🔄 Loop: ON' : '🔄 Loop: OFF';
+    this.loopButton.classList.toggle('active', this.isLooping);
   }
 }
 

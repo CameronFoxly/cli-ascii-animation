@@ -98,6 +98,12 @@ body {
   align-items: center;
 }
 
+.loop-control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .bottom-controls {
   display: flex;
   flex-direction: column;
@@ -146,6 +152,19 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.loop-button {
+  min-width: 100px;
+  background-color: rgb(49, 48, 58);
+  border: 1px solid #ffffff;
+  transition: all 0.2s;
+}
+
+.loop-button.active {
+  background-color: rgba(156, 114, 219, 0.2);
+  border-color: rgb(156, 114, 219);
+  color: rgb(156, 114, 219);
 }
 
 .frame-info {
@@ -222,6 +241,10 @@ label {
     width: 80px;
     height: 38px;
   }
+  
+  .loop-button {
+    min-width: 90px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -246,6 +269,11 @@ label {
   .run-button {
     width: 75px;
     height: 34px;
+  }
+  
+  .loop-button {
+    min-width: 80px;
+    font-size: 9px;
   }
   
   input[type="number"] {
