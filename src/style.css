@@ -108,8 +108,12 @@ button:disabled {
 }
 
 .run-button {
-  min-width: 85px;
+  width: 85px;
+  height: 36px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .frame-info {
@@ -173,10 +177,12 @@ label {
     padding: 10px 12px;
     font-size: 11px;
     min-width: 75px;
+    height: 38px;
   }
   
   .run-button {
-    min-width: 80px;
+    width: 80px;
+    height: 38px;
   }
 }
 
@@ -194,10 +200,12 @@ label {
     padding: 8px 10px;
     font-size: 10px;
     min-width: 70px;
+    height: 34px;
   }
   
   .run-button {
-    min-width: 75px;
+    width: 75px;
+    height: 34px;
   }
   
   input[type="number"] {
