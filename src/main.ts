@@ -45,27 +45,10 @@ class ASCIIAnimationPlayer {
     this.bindEvents();
     this.updateDisplay();
     
-    // Size immediately and show the terminal
-    this.adjustFontSize();
-    this.terminalScreen.style.opacity = '1';
-    
-    // Improved resize handler with debouncing and proper cleanup
-    let resizeTimer: number | null = null;
-    const handleResize = () => {
-      if (resizeTimer) {
-        clearTimeout(resizeTimer);
-      }
-      resizeTimer = window.setTimeout(() => {
-        // Force a recalculation by temporarily clearing the font size
-        this.terminalScreen.style.removeProperty('font-size');
-        // Use RAF to ensure DOM updates are complete
-        requestAnimationFrame(() => {
-          this.adjustFontSize();
-        });
-      }, 50); // 50ms debounce to prevent excessive calls
-    };
-    
-    window.addEventListener('resize', handleResize);
+    // Simple fade-in after DOM is ready
+    requestAnimationFrame(() => {
+      this.terminalScreen.style.opacity = '1';
+    });
   }
 
   private createUI(): void {
@@ -186,38 +169,6 @@ class ASCIIAnimationPlayer {
     }
   }
 
-  private adjustFontSize(): void {
-    const container = this.terminalScreen.parentElement;
-    if (!container) return;
-    
-    // Force a layout recalculation to get accurate measurements
-    container.offsetHeight; // Trigger layout
-    
-    // Get the available width (container minus padding)
-    // Use getBoundingClientRect for more accurate measurements
-    const containerRect = container.getBoundingClientRect();
-    const computedStyle = window.getComputedStyle(container);
-    const paddingLeft = parseFloat(computedStyle.paddingLeft) || 0;
-    const paddingRight = parseFloat(computedStyle.paddingRight) || 0;
-    
-    const availableWidth = containerRect.width - paddingLeft - paddingRight;
-    
-    if (availableWidth <= 0) return;
-    
-    // Simple calculation based on character width
-    // Fira Code is approximately 0.6em wide per character
-    const targetChars = 80;
-    let optimalSize = availableWidth / (targetChars * 0.6);
-    
-    // Clamp between min and max
-    optimalSize = Math.max(6, Math.min(optimalSize, 24));
-    
-    // Round to prevent sub-pixel rendering issues
-    optimalSize = Math.round(optimalSize * 10) / 10;
-    
-    // Force override any CSS by using !important
-    this.terminalScreen.style.setProperty('font-size', optimalSize + 'px', 'important');
-  }
 }
 
 // Initialize the application

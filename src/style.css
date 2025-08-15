@@ -40,7 +40,8 @@ body {
 
 .terminal-screen {
   font-family: 'Fira Code', monospace;
-  font-size: 16px; /* Default size, will be overridden by JS */
+  /* Start at 12.5px maximum, then scale down based on viewport width */
+  font-size: clamp(8px, 1.25vw, 12.5px);
   color: rgb(156, 114, 219);
   background-color: rgb(49, 48, 58);
   white-space: pre;
@@ -53,7 +54,7 @@ body {
   cursor: text;
   box-sizing: border-box;
   transition: opacity 0.15s ease-in;
-  opacity: 0; /* Hide until properly sized */
+  opacity: 0; /* Hide until ready */
 }
 
 .controls {
