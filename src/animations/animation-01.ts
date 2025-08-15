@@ -252,8 +252,8 @@ const frames: AnimationFrame[] = [
 const animation: Animation = {
   metadata: {
     id: 'animation-01',
-    name: 'Welcome Animation',
-    description: 'Original welcome animation with ASCII art and text effects'
+    name: 'Copilot Flies In',
+    description: 'Copilot flies in from left to right to reveal text.'
   },
   frames
 };

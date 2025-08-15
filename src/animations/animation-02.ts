@@ -9,7 +9,7 @@ import type { Animation, AnimationFrame } from '../animation-registry';
 const frames: AnimationFrame[] = [
     {
     title: "Frame 0",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -19,7 +19,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 1",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -32,7 +32,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 2",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -45,7 +45,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 3",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -58,7 +58,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 4",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -71,7 +71,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 5",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -84,7 +84,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 6",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -97,7 +97,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 7",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -110,7 +110,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 8",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -123,7 +123,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 9",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -136,7 +136,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 10",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -149,7 +149,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 11",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -163,7 +163,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 12",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
                                                                                 
                                                                                 
@@ -179,7 +179,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 13",
-    duration: 60,
+    duration: 40,
     content: `                                                                                
 █▀▀▀───────────────────────────────────────────────────▀▀▀█                     
 █      ░██████ ░██░████████░██  ░██░██   ░██░██████       █                     
@@ -197,7 +197,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 14",
-    duration: 60,
+    duration: 40,
     content: `█▀▀▀───────────────────────────────────────────────────▀▀▀█
 █                        Welcome to                       █
 │      ░██████ ░██░████████░██  ░██░██   ░██░██████       │
@@ -219,8 +219,8 @@ const frames: AnimationFrame[] = [
 const animation: Animation = {
   metadata: {
     id: 'animation-02',
-    name: 'GitHub Copilot Loading',
-    description: 'A 14-frame animation showing the GitHub Copilot logo appearing with welcome text'
+    name: 'UI Corner Box Reveal',
+    description: 'Game-style UI with corner accents with eased slides'
   },
   frames
 };
