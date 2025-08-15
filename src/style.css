@@ -20,23 +20,27 @@ body {
 }
 
 #app {
-  max-width: 1280px;
+  max-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .terminal-container {
   background-color: rgb(49, 48, 58);
   border: 1px solid #ffffff;
   border-radius: 8px;
-  padding: 20px;
+  padding: 10px;
   margin-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .terminal-screen {
   font-family: 'Fira Code', monospace;
-  font-size: 14px;
+  font-size: 12px; /* Will be dynamically adjusted */
   color: rgb(156, 114, 219);
   background-color: rgb(49, 48, 58);
   white-space: pre;
@@ -47,6 +51,7 @@ body {
   width: 100%;
   overflow: hidden;
   cursor: text;
+  box-sizing: border-box;
 }
 
 .controls {
@@ -122,4 +127,50 @@ label {
   font-family: 'Fira Code', monospace;
   font-size: 12px;
   margin-bottom: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .frame-controls {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  button {
+    padding: 10px 12px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 480px) {
+  .terminal-container {
+    padding: 5px;
+  }
+  
+  #app {
+    padding: 0.5rem;
+  }
+  
+  button {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  
+  input[type="number"] {
+    width: 60px;
+    font-size: 10px;
+  }
+  
+  label {
+    font-size: 10px;
+  }
+  
+  .frame-info {
+    font-size: 10px;
+  }
 }

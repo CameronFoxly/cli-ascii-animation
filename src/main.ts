@@ -44,6 +44,10 @@ class ASCIIAnimationPlayer {
     this.createUI();
     this.bindEvents();
     this.updateDisplay();
+    this.adjustFontSize();
+    
+    // Adjust font size on window resize
+    window.addEventListener('resize', () => this.adjustFontSize());
   }
 
   private createUI(): void {
@@ -162,6 +166,21 @@ class ASCIIAnimationPlayer {
       this.stopAnimation();
       this.startAnimation();
     }
+  }
+
+  private adjustFontSize(): void {
+    // Calculate the optimal font size to fit 80 characters in the container width
+    const container = this.terminalScreen.parentElement;
+    if (!container) return;
+    
+    const containerWidth = container.clientWidth - 20; // Account for padding
+    const targetChars = 80;
+    
+    // Start with a reasonable font size and adjust
+    let fontSize = Math.floor(containerWidth / (targetChars * 0.6)); // 0.6 is approximate char width ratio
+    fontSize = Math.max(6, Math.min(fontSize, 16)); // Clamp between 6px and 16px
+    
+    this.terminalScreen.style.fontSize = fontSize + 'px';
   }
 }
 
