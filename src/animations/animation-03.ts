@@ -223,7 +223,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 12",
-    duration: 40,
+    duration: 500,
     content: `
 ┌──                                                                          ──┐
 │       ▄██████▄                                                               │

@@ -229,7 +229,7 @@ const frames: AnimationFrame[] = [
   },
   {
     title: "Frame 11",
-    duration: 100,
+    duration: 500,
     content: `
  ╔══════════════════════════════════════════════════════════════════╗ 
 ╔╝ Welcome to                                    ▄███████▄          ╚╗
