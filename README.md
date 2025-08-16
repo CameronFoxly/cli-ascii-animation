@@ -1,17 +1,19 @@
 # CLI ASCII Animation Player
 
-A modern web application for displaying ASCII animations in a terminal-style interface. Built with Vite and TypeScript.
+A modern web application for displaying ASCII animations in a terminal-style interface. Built with React, Vite, and TypeScript.
 
 ## Features
 
+- **React-based UI** with modern component architecture
 - **Terminal-styled interface** with Fira Code font and green-on-black color scheme
-- **80x15 character display area** perfect for ASCII art animations
+- **Dynamic display sizing** that adapts to animation content
 - **Editable text** - you can copy and paste the ASCII content
+- **Multiple animation support** with dropdown selector
 - **Animation controls**:
-  - Run button to play the full animation once
-  - Frame-by-frame navigation (previous/next)
+  - Run/Stop button with loop support
+  - Frame-by-frame navigation (previous/next/start/end)
   - Adjustable frame rate (50-2000ms per frame)
-- **12-frame animation support** with placeholder content
+- **Version support** for animation-01 with dynamic version loading
 - **GitHub Pages deployment** ready
 
 ## Development

@@ -21,7 +21,9 @@ body {
   padding: 20px;
 }
 
-#app {
+#app,
+#root,
+.app {
   max-width: 100%;
   margin: 0;
   padding: 0;
@@ -321,4 +323,20 @@ label {
   label {
     font-size: 10px;
   }
+}
+
+/* Loading and error states */
+.loading,
+.error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #181818;
+}
+
+.error {
+  color: #ff6b6b;
 }

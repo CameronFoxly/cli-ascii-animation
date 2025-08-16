@@ -13,6 +13,10 @@
     "moduleDetection": "force",
     "noEmit": true,
 
+    /* JSX support */
+    "jsx": "react-jsx",
+    "types": ["react", "react-dom"],
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
