@@ -7,6 +7,16 @@
 import type { Animation, AnimationFrame } from '../animation-registry';
 
 export function createAnimation(version: string = '0.0.1'): Animation {
+  // Helper function to create properly spaced version string for alignment
+  const createVersionLine = (version: string, spacesAfterVersion: number): string => {
+    // Calculate the total width needed: "CLI Version " + version + spaces to maintain alignment
+    const baseText = `CLI Version ${version}`;
+    const targetWidth = 'CLI Version 0.0.1'.length + spacesAfterVersion; // Use default version as baseline
+    const currentWidth = baseText.length;
+    const paddingNeeded = Math.max(0, targetWidth - currentWidth);
+    return baseText + ' '.repeat(paddingNeeded);
+  };
+
   const frames: AnimationFrame[] = [
   {
     title: "Frame 0",
@@ -124,7 +134,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│▀█  █████  ▀████                
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│ ▀██████▌    ▄ ▌                
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘   ▀████     ▀▐                 
-│                              CLI Version ${version}     ▀▀██▄▄▄▄▄▀     │           
+│                              ${createVersionLine(version, 5)}▀▀██▄▄▄▄▄▀     │           
 └──                                                               ──┘`
   },
   {
@@ -140,7 +150,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
    ██│    ██│  ██│██┌──┘ ██│██│ .  ██│  ██│  ██│   █ █████  ▀▀▀▀ ▄▐█
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│   ▀██████    █  ▀ █
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀████▄       ▄▌
-│                              CLI Version ${version}        ▀▀████████▀       │
+│                              ${createVersionLine(version, 8)}▀▀████████▀       │
 └──                                                                     ──┘`
   },
   {
@@ -156,7 +166,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ▌█████▌    ▄  ▄  ▐███      
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│  *  ██████▌    █  █  ▐█▀       
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘      ▀█████▄        ▄█▀        
-│                              CLI Version ${version}          ▀▀█████████▀       │  
+│                              ${createVersionLine(version, 10)}▀▀█████████▀       │  
 └──                                                                        ──┘`
   },
   {
@@ -172,7 +182,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│ . , ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘ ' ' ▀███▄            ▄███▀     
-│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
+│                              ${createVersionLine(version, 8)}▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   },
   {
@@ -188,7 +198,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀     
-│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
+│                              ${createVersionLine(version, 8)}▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   },
   {
@@ -204,7 +214,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀     
-│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
+│                              ${createVersionLine(version, 8)}▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   },
    {
@@ -220,7 +230,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀     
-│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
+│                              ${createVersionLine(version, 8)}▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   },
   {
@@ -236,7 +246,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████              ████    
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████    ▀▀  ▀▀    ████    
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀    
-│                              CLI Version ${version}        ▀▀████████████▀▀      │
+│                              ${createVersionLine(version, 8)}▀▀████████████▀▀      │
 └──                                                                         ──┘`
   },
   {
@@ -252,7 +262,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀     
-│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
+│                              ${createVersionLine(version, 8)}▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   }
   ];
