@@ -22,6 +22,7 @@ class ASCIIAnimationPlayer {
   private frameDurationInput!: HTMLInputElement;
   private frameInfo!: HTMLInputElement;
   private animationSelector!: HTMLSelectElement;
+  private versionInput!: HTMLInputElement;
 
   constructor() {
     this.initializeApp();
@@ -33,7 +34,13 @@ class ASCIIAnimationPlayer {
     
     // Set up the default animation
     this.currentAnimationId = animationRegistry.getDefaultAnimationId();
-    currentAnimationFrames = animationRegistry.createAnimationFrames(this.currentAnimationId) || null;
+    
+    // Load animation frames with version support for animation-01
+    if (this.currentAnimationId === 'animation-01') {
+      currentAnimationFrames = await animationRegistry.createAnimationFramesWithVersion('0.0.1') || null;
+    } else {
+      currentAnimationFrames = animationRegistry.createAnimationFrames(this.currentAnimationId) || null;
+    }
     
     if (!currentAnimationFrames) {
       console.error('Failed to load default animation');
@@ -69,6 +76,11 @@ class ASCIIAnimationPlayer {
         <select id="animation-select">
           ${animationOptions}
         </select>
+      </div>
+      
+      <div class="version-control" ${this.currentAnimationId === 'animation-01' ? '' : 'style="display: none;"'}>
+        <label for="version-input">Version:</label>
+        <input type="text" id="version-input" value="0.0.1" placeholder="e.g. 1.2.3">
       </div>
       
       <textarea 
@@ -118,6 +130,7 @@ class ASCIIAnimationPlayer {
     this.frameDurationInput = document.getElementById('frame-duration') as HTMLInputElement;
     this.frameInfo = document.getElementById('current-frame') as HTMLInputElement;
     this.animationSelector = document.getElementById('animation-select') as HTMLSelectElement;
+    this.versionInput = document.getElementById('version-input') as HTMLInputElement;
   }
 
   private bindEvents(): void {
@@ -129,6 +142,7 @@ class ASCIIAnimationPlayer {
     this.loopButton.addEventListener('click', () => this.toggleLoop());
     this.frameDurationInput.addEventListener('change', () => this.updateCurrentFrameDuration());
     this.animationSelector.addEventListener('change', () => this.changeAnimation());
+    this.versionInput.addEventListener('input', () => this.updateVersion());
   }
 
   private async changeAnimation(): Promise<void> {
@@ -139,10 +153,50 @@ class ASCIIAnimationPlayer {
 
     // Switch to new animation
     this.currentAnimationId = this.animationSelector.value;
-    currentAnimationFrames = animationRegistry.createAnimationFrames(this.currentAnimationId) || null;
+    
+    // Show/hide version control based on animation type
+    const versionControl = document.querySelector('.version-control') as HTMLElement;
+    if (versionControl) {
+      versionControl.style.display = this.currentAnimationId === 'animation-01' ? 'block' : 'none';
+    }
+    
+    // Load animation frames (with version if it's animation-01)
+    if (this.currentAnimationId === 'animation-01') {
+      currentAnimationFrames = await animationRegistry.createAnimationFramesWithVersion(this.versionInput.value) || null;
+    } else {
+      currentAnimationFrames = animationRegistry.createAnimationFrames(this.currentAnimationId) || null;
+    }
     
     if (!currentAnimationFrames) {
       console.error(`Failed to load animation: ${this.currentAnimationId}`);
+      return;
+    }
+
+    // Reset to first frame
+    this.currentFrame = 0;
+    
+    // Update the UI dimensions and content
+    this.updateTerminalDimensions();
+    this.updateFrameCount();
+    this.updateDisplay();
+  }
+
+  private async updateVersion(): Promise<void> {
+    // Only update if we're currently showing animation-01
+    if (this.currentAnimationId !== 'animation-01') {
+      return;
+    }
+
+    // Stop current animation if playing
+    if (this.isPlaying) {
+      this.stopAnimation();
+    }
+
+    // Reload animation frames with new version
+    currentAnimationFrames = await animationRegistry.createAnimationFramesWithVersion(this.versionInput.value) || null;
+    
+    if (!currentAnimationFrames) {
+      console.error('Failed to reload animation with new version');
       return;
     }
 

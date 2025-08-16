@@ -241,4 +241,21 @@ export class AnimationRegistry {
     }
     return undefined;
   }
+
+  /**
+   * Create an AnimationFrames instance for animation-01 with a custom version
+   * @param version - The version string to display in the animation
+   * @returns Promise that resolves to AnimationFrames instance for animation-01 with custom version
+   */
+  public async createAnimationFramesWithVersion(version: string): Promise<AnimationFrames | undefined> {
+    try {
+      // Import the createAnimation function for animation-01
+      const module = await import('./animations/animation-01');
+      const animation = module.createAnimation(version);
+      return new AnimationFrames(animation.frames);
+    } catch (error) {
+      console.error('Failed to create animation with version:', error);
+      return undefined;
+    }
+  }
 }

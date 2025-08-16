@@ -6,7 +6,8 @@
 
 import type { Animation, AnimationFrame } from '../animation-registry';
 
-const frames: AnimationFrame[] = [
+export function createAnimation(version: string = '0.0.1'): Animation {
+  const frames: AnimationFrame[] = [
   {
     title: "Frame 0",
     duration: 80,
@@ -107,7 +108,7 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  █▌█████  ███  ▀▀█▌    
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘▀████████  ▐ ▌     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   ▀█████▌   ▐      
-│                                  Version      ▀████▄▄▌     │
+│                              CLI Version      ▀████▄▄▌     │
 └──                                                 ▀▀▀    ──┘`
   },
   {
@@ -123,7 +124,7 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│▀█  █████  ▀████                
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│ ▀██████▌    ▄ ▌                
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘   ▀████     ▀▐                 
-│                                  Version 0.0.1     ▀▀██▄▄▄▄▄▀     │           
+│                              CLI Version ${version}     ▀▀██▄▄▄▄▄▀     │           
 └──                                                               ──┘`
   },
   {
@@ -139,7 +140,7 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│ .  ██│  ██│  ██│   █ █████  ▀▀▀▀ ▄▐█
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│   ▀██████    █  ▀ █
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀████▄       ▄▌
-│                                  Version 0.0.1        ▀▀████████▀       │
+│                              CLI Version ${version}        ▀▀████████▀       │
 └──                                                                     ──┘`
   },
   {
@@ -155,7 +156,7 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ▌█████▌    ▄  ▄  ▐███      
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│  *  ██████▌    █  █  ▐█▀       
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘      ▀█████▄        ▄█▀        
-│                                  Version 0.0.1          ▀▀█████████▀       │  
+│                              CLI Version ${version}          ▀▀█████████▀       │  
 └──                                                                        ──┘`
   },
   {
@@ -171,7 +172,7 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│ . , ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘ ' ' ▀███▄            ▄███▀     
-│                                  Version 0.0.1        ▀▀████████████▀▀      │ 
+│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   },
   {
@@ -187,7 +188,7 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀     
-│                                  Version 0.0.1        ▀▀████████████▀▀      │ 
+│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   },
   {
@@ -203,7 +204,7 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀     
-│                                  Version 0.0.1        ▀▀████████████▀▀      │ 
+│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   },
    {
@@ -219,7 +220,7 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀     
-│                                  Version 0.0.1        ▀▀████████████▀▀      │ 
+│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   },
   {
@@ -235,7 +236,7 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████              ████    
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████    ▀▀  ▀▀    ████    
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀    
-│                                  Version 0.0.1        ▀▀████████████▀▀      │
+│                              CLI Version ${version}        ▀▀████████████▀▀      │
 └──                                                                         ──┘`
   },
   {
@@ -251,18 +252,20 @@ const frames: AnimationFrame[] = [
    ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│     ████     ▄  ▄     ████     
    └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│     ████     █  █     ████     
     └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘     ▀███▄            ▄███▀     
-│                                  Version 0.0.1        ▀▀████████████▀▀      │ 
+│                              CLI Version ${version}        ▀▀████████████▀▀      │ 
 └──                                                                         ──┘`
   }
-];
+  ];
 
-const animation: Animation = {
-  metadata: {
-    id: 'animation-01',
-    name: 'Short Fly In',
-    description: 'GitHub Copilot welcome screen animation with progressive logo and text reveal'
-  },
-  frames
-};
+  return {
+    metadata: {
+      id: 'animation-01',
+      name: 'Short Fly In',
+      description: 'GitHub Copilot welcome screen animation with progressive logo and text reveal'
+    },
+    frames
+  };
+}
 
+const animation: Animation = createAnimation();
 export default animation;

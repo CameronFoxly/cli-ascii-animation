@@ -60,6 +60,36 @@ body {
   border-color: rgb(156, 114, 219);
 }
 
+.version-control {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.version-control label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.version-control input {
+  background-color: #181818;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  padding: 6px 12px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  border-radius: 4px;
+  min-width: 120px;
+}
+
+.version-control input:focus {
+  outline: none;
+  border-color: rgb(156, 114, 219);
+}
+
 .terminal-screen {
   font-family: 'Fira Code', monospace;
   /* Calculate font size based on content width (80 chars) plus some margin */
