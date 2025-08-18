@@ -1,11 +1,15 @@
-# CLI ASCII Animation Player
+# ASCII Animation Player
 
-A modern web application for displaying ASCII animations in a terminal-style interface. Built with React, Vite, and TypeScript.
+A simple rig for playing back ascii animation to test timing, style and dynamic elements. 
+
+<img width="1436" height="1196" alt="Screenshot 2025-08-18 at 9 18 12 AM" src="https://github.com/user-attachments/assets/ebb9f94d-e47c-47c6-8c97-7bf73347dab5" />
+
+🔗 [Live demo](https://cameronfoxly.github.io/cli-ascii-animation/)
 
 ## Features
 
 - **React-based UI** with modern component architecture
-- **Terminal-styled interface** with Fira Code font and green-on-black color scheme
+- **Terminal-styled interface** with Fira Code font
 - **Dynamic display sizing** that adapts to animation content
 - **Editable text** - you can copy and paste the ASCII content
 - **Multiple animation support** with dropdown selector
@@ -18,16 +22,11 @@ A modern web application for displaying ASCII animations in a terminal-style int
 
 ## Development
 
-### Prerequisites
-
-- Node.js 18 or higher
-- npm
-
 ### Getting Started
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/cli-ascii-animation.git
+   git clone https://github.com/cameronfoxly/cli-ascii-animation.git
    cd cli-ascii-animation
    ```
 
@@ -63,14 +62,7 @@ This project is configured for automatic deployment to GitHub Pages via GitHub A
 
 1. Build the project
 2. Deploy to GitHub Pages
-3. Make it available at `https://yourusername.github.io/cli-ascii-animation/`
-
-### Manual GitHub Pages Setup
-
-1. Go to your repository settings
-2. Navigate to "Pages" in the sidebar
-3. Under "Source", select "GitHub Actions"
-4. The deployment workflow will handle the rest
+3. Make it available at `https://cameronfoxly.github.io/cli-ascii-animation/`
 
 ## Customizing the Animation
 
@@ -108,13 +100,6 @@ Popular terminal color schemes:
 - **Amber**: `#ffb000` on `#000000`
 - **Blue**: `#0099ff` on `#000000`
 - **White**: `#ffffff` on `#000000`
-
-## Technologies Used
-
-- **Vite** - Fast build tool and development server
-- **TypeScript** - Type-safe JavaScript
-- **CSS3** - Modern styling with Fira Code font
-- **GitHub Actions** - Automated deployment
 
 ## License
 
