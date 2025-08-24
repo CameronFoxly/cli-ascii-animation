@@ -10,6 +10,7 @@ export interface AnimationFrame {
   title: string;
   content: string;
   duration: number; // Duration in milliseconds for this frame
+  colors?: Record<string, number>; // Maps "row,col" positions to palette color indices (0-15)
 }
 
 export interface AnimationMetadata {
@@ -55,6 +56,14 @@ export class AnimationFrames {
    */
   public getFrameCount(): number {
     return this.frames.length;
+  }
+
+  /**
+   * Get all frames as an array (for direct manipulation)
+   * @returns Array of all frame objects
+   */
+  public getAllFrames(): AnimationFrame[] {
+    return [...this.frames];
   }
 
   /**

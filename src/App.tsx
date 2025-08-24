@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { AnimationRegistry, AnimationFrames } from './animation-registry';
 import AnimationSelector from './components/AnimationSelector.tsx';
 import VersionControl from './components/VersionControl.tsx';
 import TerminalScreen from './components/TerminalScreen.tsx';
 import Controls from './components/Controls.tsx';
+import ColorPaletteComponent from './components/ColorPaletteComponent.tsx';
+import ColorEditorTools from './components/ColorEditorTools.tsx';
 import { useAnimationPlayer } from './hooks/useAnimationPlayer';
+import { ColorPalette } from './color-palette';
+import { ColorEditState } from './color-edit-state';
+import { AnimationExporter } from './animation-exporter';
 import './style.css';
 
 const App: React.FC = () => {
@@ -14,6 +19,14 @@ const App: React.FC = () => {
   const [version, setVersion] = useState<string>('0.0.1');
   const [frameDuration, setFrameDuration] = useState<number>(100);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+
+  // Color editing state
+  const [colorPalette] = useState(() => new ColorPalette());
+  const [colorEditState] = useState(() => new ColorEditState());
+  const [animationExporter] = useState(() => new AnimationExporter());
+  const [selectedTool, setSelectedTool] = useState<'brush' | 'eraser'>('brush');
+  const [selectedColor, setSelectedColor] = useState<number>(15); // Default to white
+  const [, setForceUpdate] = useState(0); // For triggering re-renders
 
   const {
     currentFrame,
@@ -96,6 +109,65 @@ const App: React.FC = () => {
     }
   };
 
+  // Color editing handler
+  const handleCharacterEdit = useCallback((row: number, col: number) => {
+    if (!currentAnimationFrames) return;
+    
+    const frames = currentAnimationFrames.getAllFrames();
+    
+    colorEditState.startBatch();
+    
+    if (selectedTool === 'brush') {
+      colorEditState.paintCharacter(frames, currentFrame, row, col, selectedColor);
+    } else {
+      colorEditState.eraseCharacter(frames, currentFrame, row, col);
+    }
+    
+    colorEditState.commitBatch();
+    
+    // Force re-render without changing the animation frames reference
+    setForceUpdate(prev => prev + 1);
+  }, [currentAnimationFrames, currentFrame, selectedTool, selectedColor, colorEditState, setForceUpdate]);
+
+  // Placeholder handlers to prevent errors
+  const handleUndo = useCallback(() => {
+    // TODO: Implement undo
+  }, []);
+
+  const handleRedo = useCallback(() => {
+    // TODO: Implement redo
+  }, []);
+
+  const handleColorPaletteChange = useCallback(() => {
+    // TODO: Implement palette color change
+  }, []);
+
+  const handleExportAnimation = useCallback(() => {
+    if (!currentAnimationFrames) return;
+    
+    console.log('Export button clicked');
+    
+    const frames = currentAnimationFrames.getAllFrames();
+    console.log('Frames to export:', frames.length);
+    
+    const animationName = `Custom Animation ${new Date().toISOString().slice(0, 10)}`;
+    
+    const animation = animationExporter.createAnimationFromFrames(
+      frames,
+      animationName,
+      'Exported from color editor'
+    );
+    
+    console.log('Animation created:', animation);
+    
+    try {
+      animationExporter.downloadAnimation(animation);
+      console.log('Download initiated');
+    } catch (error) {
+      console.error('Export error:', error);
+    }
+  }, [currentAnimationFrames, animationExporter]);
+
   if (!isLoaded) {
     return <div className="loading">Loading animations...</div>;
   }
@@ -110,38 +182,67 @@ const App: React.FC = () => {
 
   return (
     <div className="app">
-      <AnimationSelector
-        animationRegistry={animationRegistry}
-        currentAnimationId={currentAnimationId}
-        onAnimationChange={handleAnimationChange}
-      />
-      
-      <VersionControl
-        isVisible={currentAnimationId === 'animation-01'}
-        version={version}
-        onVersionChange={handleVersionChange}
-      />
-      
-      <TerminalScreen
-        content={currentAnimationFrames.getFrameText(currentFrame)}
-        rows={rows}
-        cols={cols}
-      />
-      
-      <Controls
-        isPlaying={isPlaying}
-        isLooping={isLooping}
-        currentFrame={currentFrame}
-        totalFrames={currentAnimationFrames.getFrameCount()}
-        frameDuration={frameDuration}
-        onToggleAnimation={toggleAnimation}
-        onPreviousFrame={previousFrame}
-        onNextFrame={nextFrame}
-        onGoToStart={goToStart}
-        onGoToEnd={goToEnd}
-        onToggleLoop={toggleLoop}
-        onUpdateFrameDuration={updateFrameDuration}
-      />
+      <div className="app-layout">
+        <div className="main-content">
+          <AnimationSelector
+            animationRegistry={animationRegistry}
+            currentAnimationId={currentAnimationId}
+            onAnimationChange={handleAnimationChange}
+          />
+          
+          <VersionControl
+            isVisible={currentAnimationId === 'animation-01'}
+            version={version}
+            onVersionChange={handleVersionChange}
+          />
+          
+          <TerminalScreen
+            content={currentAnimationFrames.getFrameText(currentFrame)}
+            rows={rows}
+            cols={cols}
+            frame={currentAnimationFrames.getFrame(currentFrame)}
+            colorPalette={colorPalette}
+            isEditMode={true}
+            selectedTool={selectedTool}
+            selectedColor={selectedColor}
+            onCharacterEdit={handleCharacterEdit}
+          />
+          
+          <Controls
+            isPlaying={isPlaying}
+            isLooping={isLooping}
+            currentFrame={currentFrame}
+            totalFrames={currentAnimationFrames.getFrameCount()}
+            frameDuration={frameDuration}
+            onToggleAnimation={toggleAnimation}
+            onPreviousFrame={previousFrame}
+            onNextFrame={nextFrame}
+            onGoToStart={goToStart}
+            onGoToEnd={goToEnd}
+            onToggleLoop={toggleLoop}
+            onUpdateFrameDuration={updateFrameDuration}
+          />
+        </div>
+        
+        <div className="sidebar">
+          <ColorPaletteComponent
+            colorPalette={colorPalette}
+            selectedColor={selectedColor}
+            onColorSelect={setSelectedColor}
+            onColorChange={handleColorPaletteChange}
+          />
+          
+          <ColorEditorTools
+            selectedTool={selectedTool}
+            onToolChange={setSelectedTool}
+            canUndo={colorEditState.canUndo()}
+            canRedo={colorEditState.canRedo()}
+            onUndo={handleUndo}
+            onRedo={handleRedo}
+            onExport={handleExportAnimation}
+          />
+        </div>
+      </div>
     </div>
   );
 };

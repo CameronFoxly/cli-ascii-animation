@@ -98,23 +98,232 @@ body {
   font-size: min(14px, calc((100vw - 64px) / 60));
   color: #ffffff;
   background-color: #181818;
-  border: none;
-  border-radius: 0;
-  padding: 0;
-  margin: 0 0 30px 0; /* Left-aligned with bottom margin */
-  white-space: pre;
-  line-height: 1.2;
-  outline: none;
+  border: 1px solid #ffffff;
+  padding: 20px;
+  min-height: 400px;
+  width: 100%;
   resize: none;
-  /* Set width to fit content - exactly 80 characters */
-  width: 80ch; /* Use character units for precise sizing */
-  max-width: calc(100vw - 40px); /* Account for 20px margin on each side */
-  overflow: hidden;
-  cursor: text;
-  box-sizing: border-box;
-  transition: opacity 0.15s ease-in;
-  opacity: 0; /* Hide until ready */
-  display: block; /* Ensure it's a block element */
+  line-height: 1.2;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  white-space: pre;
+  overflow: auto;
+}
+
+/* New grid-based terminal screen */
+.terminal-screen-container {
+  font-family: 'Fira Code', monospace;
+  font-size: min(14px, calc((100vw - 64px) / 60));
+  background-color: #181818;
+  border: 1px solid #ffffff;
+  padding: 20px;
+  min-height: 400px;
+  width: 100%;
+  line-height: 1.2;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  white-space: pre;
+  overflow: auto;
+}
+
+.terminal-grid {
+  display: block;
+  white-space: pre;
+}
+
+.terminal-row {
+  display: block;
+  white-space: pre;
+}
+
+.terminal-char {
+  display: inline;
+  white-space: pre;
+  transition: color 0.1s ease;
+}
+
+.terminal-char.editable {
+  cursor: pointer;
+}
+
+.terminal-char.editable:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.terminal-screen-container.edit-mode .terminal-char.editable {
+  cursor: crosshair;
+}
+
+/* Color Palette Styles */
+.color-palette {
+  background-color: #2a2a2a;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.color-palette h3 {
+  margin: 0 0 15px 0;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 8px;
+  max-width: 400px;
+}
+
+.color-swatch {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.color-display {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.color-swatch.selected .color-display {
+  border-color: rgb(156, 114, 219);
+  box-shadow: 0 0 8px rgba(156, 114, 219, 0.5);
+}
+
+.color-display:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.color-picker {
+  width: 20px;
+  height: 16px;
+  border: none;
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.color-picker:hover {
+  opacity: 1;
+}
+
+.color-index {
+  font-size: 10px;
+  color: #cccccc;
+  font-family: 'Fira Code', monospace;
+}
+
+/* Color Editor Tools Styles */
+.color-editor-tools {
+  background-color: #2a2a2a;
+  border: 1px solid #ffffff;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.color-editor-tools h3 {
+  margin: 0 0 10px 0;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tool-section,
+.action-section,
+.export-section {
+  margin-bottom: 20px;
+}
+
+.tool-buttons,
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.tool-button,
+.action-button,
+.export-button {
+  background-color: #181818;
+  color: #ffffff;
+  border: 1px solid #ffffff;
+  padding: 8px 12px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 80px;
+}
+
+.tool-button:hover,
+.action-button:hover,
+.export-button:hover {
+  background-color: rgba(156, 114, 219, 0.2);
+  border-color: rgb(156, 114, 219);
+}
+
+.tool-button.active {
+  background-color: rgb(156, 114, 219);
+  border-color: rgb(156, 114, 219);
+}
+
+.action-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-button:disabled:hover {
+  background-color: #181818;
+  border-color: #ffffff;
+}
+
+.export-button {
+  background-color: #0d7377;
+  border-color: #0d7377;
+  min-width: 150px;
+}
+
+.export-button:hover {
+  background-color: #14a085;
+  border-color: #14a085;
+}
+
+/* Layout adjustments for color editor */
+.app-layout {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.main-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 1024px) {
+  .app-layout {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+  }
 }
 
 .controls {

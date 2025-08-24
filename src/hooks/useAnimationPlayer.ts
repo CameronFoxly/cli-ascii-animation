@@ -45,10 +45,30 @@ export const useAnimationPlayer = (animationFrames: AnimationFrames | null) => {
     };
   }, [isPlaying, currentFrame, scheduleNextFrame]);
 
-  // Reset frame when animation changes
+  // Reset frame when animation changes (but not when just updating colors)
+  const [lastAnimationId, setLastAnimationId] = useState<string>('');
+  
   useEffect(() => {
-    setCurrentFrame(0);
-  }, [animationFrames]);
+    if (animationFrames) {
+      // Generate a simple ID based on the animation content
+      const animationId = animationFrames.getAllFramesAsText().join('|');
+      
+      // Only reset if it's actually a different animation (different content)
+      if (animationId !== lastAnimationId) {
+        setCurrentFrame(0);
+        setLastAnimationId(animationId);
+      }
+      
+      // But still clamp frame if it exceeds bounds
+      const frameCount = animationFrames.getFrameCount();
+      if (currentFrame >= frameCount) {
+        setCurrentFrame(Math.max(0, frameCount - 1));
+      }
+    } else {
+      setCurrentFrame(0);
+      setLastAnimationId('');
+    }
+  }, [animationFrames, lastAnimationId, currentFrame]);
 
   const toggleAnimation = useCallback(() => {
     if (isPlaying) {
