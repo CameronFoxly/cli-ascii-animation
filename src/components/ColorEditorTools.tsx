@@ -58,7 +58,7 @@ const ColorEditorTools: React.FC<ColorEditorToolsProps> = ({
           <button
             className={`tool-button ${selectedTool === 'brush' ? 'active' : ''}`}
             onClick={() => onToolChange('brush')}
-            title="Brush Tool - Paint characters (Hold Alt + Click to eyedrop colors)"
+            title="Brush Tool - Paint characters (Hold Alt + Click to eyedrop colors, Hold Shift + Click to paint lines)"
           >
             🖌️ Brush
           </button>
@@ -116,6 +116,7 @@ const ColorEditorTools: React.FC<ColorEditorToolsProps> = ({
         <h3>Tips</h3>
         <div className="help-text">
           <p>💡 Hold <kbd>Alt</kbd> + click while using the brush tool to eyedrop colors from characters</p>
+          <p>📏 Hold <kbd>Shift</kbd> + click to paint straight lines from the last painted character</p>
         </div>
       </div>
     </div>

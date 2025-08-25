@@ -11,7 +11,7 @@ interface TerminalScreenProps {
   isEditMode?: boolean;
   selectedTool?: 'brush' | 'eraser';
   selectedColor?: number;
-  onCharacterEdit?: (row: number, col: number) => void;
+  onCharacterEdit?: (row: number, col: number, isShiftClick?: boolean) => void;
   onEyedropper?: (row: number, col: number) => void;
 }
 
@@ -31,6 +31,7 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const [dragStarted, setDragStarted] = useState(false);
   const [isAltPressed, setIsAltPressed] = useState(false);
+  const [isShiftPressed, setIsShiftPressed] = useState(false);
 
   // Parse content into a 2D character grid
   const parseContent = useCallback((): string[][] => {
@@ -66,7 +67,7 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
   }, [frame?.colors, colorPalette]);
 
   // Handle character click/drag
-  const handleCharacterInteraction = useCallback((row: number, col: number, isEyedropper = false) => {
+  const handleCharacterInteraction = useCallback((row: number, col: number, isEyedropper = false, isShiftClick = false) => {
     if (!isEditMode) return;
     
     const char = characterGrid[row]?.[col];
@@ -75,7 +76,7 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
     if (isEyedropper && onEyedropper) {
       onEyedropper(row, col);
     } else if (onCharacterEdit) {
-      onCharacterEdit(row, col);
+      onCharacterEdit(row, col, isShiftClick);
     }
   }, [isEditMode, onCharacterEdit, onEyedropper, characterGrid]);
 
@@ -87,6 +88,13 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
     if (event.altKey && selectedTool === 'brush') {
       event.preventDefault();
       handleCharacterInteraction(row, col, true);
+      return;
+    }
+    
+    // Check for Shift key (line painting mode) and brush tool
+    if (event.shiftKey && selectedTool === 'brush') {
+      event.preventDefault();
+      handleCharacterInteraction(row, col, false, true);
       return;
     }
     
@@ -114,7 +122,7 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
     }
   }, [isDragging, handleMouseUp]);
 
-  // Keyboard event listeners for Alt key
+  // Keyboard event listeners for Alt and Shift keys
   useEffect(() => {
     if (!isEditMode) return;
 
@@ -122,11 +130,17 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
       if (event.altKey && selectedTool === 'brush') {
         setIsAltPressed(true);
       }
+      if (event.shiftKey && selectedTool === 'brush') {
+        setIsShiftPressed(true);
+      }
     };
 
     const handleKeyUp = (event: KeyboardEvent) => {
       if (!event.altKey) {
         setIsAltPressed(false);
+      }
+      if (!event.shiftKey) {
+        setIsShiftPressed(false);
       }
     };
 
@@ -167,11 +181,15 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
                 key={`${rowIndex}-${colIndex}`}
                 className={`terminal-char ${isEditMode && char !== ' ' ? 'editable' : ''} ${
                   isEditMode && char !== ' ' && isAltPressed && selectedTool === 'brush' ? 'eyedropper-hover' : ''
+                } ${
+                  isEditMode && char !== ' ' && isShiftPressed && selectedTool === 'brush' ? 'line-mode-hover' : ''
                 }`}
                 style={{
                   color: getCharacterColor(rowIndex, colIndex),
                   cursor: isEditMode && char !== ' ' 
-                    ? (isAltPressed && selectedTool === 'brush' ? 'crosshair' : 'pointer')
+                    ? (isAltPressed && selectedTool === 'brush' ? 'crosshair' 
+                      : isShiftPressed && selectedTool === 'brush' ? 'crosshair'
+                      : 'pointer')
                     : 'default'
                 }}
                 onMouseDown={(event) => handleMouseDown(event, rowIndex, colIndex)}

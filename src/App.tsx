@@ -27,6 +27,7 @@ const App: React.FC = () => {
   const [animationExporter] = useState(() => new AnimationExporter());
   const [selectedTool, setSelectedTool] = useState<'brush' | 'eraser'>('brush');
   const [selectedColor, setSelectedColor] = useState<number>(15); // Default to white
+  const [lastPaintedPosition, setLastPaintedPosition] = useState<{row: number, col: number} | null>(null);
   const [, setForceUpdate] = useState(0); // For triggering re-renders
 
   const {
@@ -165,7 +166,7 @@ const App: React.FC = () => {
   };
 
   // Color editing handler
-  const handleCharacterEdit = useCallback((row: number, col: number) => {
+  const handleCharacterEdit = useCallback((row: number, col: number, isShiftClick = false) => {
     if (!currentAnimationFrames) return;
     
     const frames = currentAnimationFrames.getAllFrames();
@@ -173,16 +174,34 @@ const App: React.FC = () => {
     colorEditState.startBatch();
     
     if (selectedTool === 'brush') {
-      colorEditState.paintCharacter(frames, currentFrame, row, col, selectedColor);
+      if (isShiftClick && lastPaintedPosition) {
+        // Paint a line from last painted position to current position
+        colorEditState.paintLine(
+          frames, 
+          currentFrame, 
+          lastPaintedPosition.row, 
+          lastPaintedPosition.col, 
+          row, 
+          col, 
+          selectedColor
+        );
+      } else {
+        // Regular single character painting
+        colorEditState.paintCharacter(frames, currentFrame, row, col, selectedColor);
+      }
+      // Update last painted position for future line painting
+      setLastPaintedPosition({ row, col });
     } else {
       colorEditState.eraseCharacter(frames, currentFrame, row, col);
+      // Clear last painted position when erasing
+      setLastPaintedPosition(null);
     }
     
     colorEditState.commitBatch();
     
     // Force re-render without changing the animation frames reference
     setForceUpdate(prev => prev + 1);
-  }, [currentAnimationFrames, currentFrame, selectedTool, selectedColor, colorEditState, setForceUpdate]);
+  }, [currentAnimationFrames, currentFrame, selectedTool, selectedColor, lastPaintedPosition, colorEditState, setForceUpdate]);
 
   // Eyedropper handler
   const handleEyedropper = useCallback((row: number, col: number) => {
