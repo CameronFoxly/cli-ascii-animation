@@ -163,6 +163,16 @@ body {
   cursor: crosshair;
 }
 
+/* Eyedropper cursor when Alt is held */
+.terminal-screen-container.edit-mode .terminal-char.editable:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.terminal-screen-container.edit-mode .terminal-char.editable.eyedropper-hover {
+  background-color: rgba(156, 114, 219, 0.2);
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M20.71,4.63L19.37,3.29C19,2.9 18.35,2.9 17.96,3.29L9,12.25L11.75,15L20.71,6.04C21.1,5.65 21.1,5 20.71,4.63M7,14A3,3 0 0,0 4,17C4,18.31 2.84,19 2,19C2.92,20.22 4.5,21 6,21A4,4 0 0,0 10,17A3,3 0 0,0 7,14Z"/></svg>') 10 10, crosshair;
+}
+
 /* Color Palette Styles */
 .color-palette {
   background-color: #2a2a2a;
@@ -288,8 +298,33 @@ body {
 
 .tool-section,
 .action-section,
-.export-section {
+.export-section,
+.help-section {
   margin-bottom: 20px;
+}
+
+.help-section:last-child {
+  margin-bottom: 0;
+}
+
+.help-text {
+  font-size: 11px;
+  color: #cccccc;
+  line-height: 1.4;
+}
+
+.help-text p {
+  margin: 0 0 8px 0;
+}
+
+.help-text kbd {
+  background-color: #444444;
+  border: 1px solid #666666;
+  border-radius: 3px;
+  padding: 2px 6px;
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  color: #ffffff;
 }
 
 .tool-buttons,

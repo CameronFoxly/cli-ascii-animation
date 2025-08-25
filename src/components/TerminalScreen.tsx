@@ -12,6 +12,7 @@ interface TerminalScreenProps {
   selectedTool?: 'brush' | 'eraser';
   selectedColor?: number;
   onCharacterEdit?: (row: number, col: number) => void;
+  onEyedropper?: (row: number, col: number) => void;
 }
 
 const TerminalScreen: React.FC<TerminalScreenProps> = ({
@@ -24,10 +25,12 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
   selectedTool = 'brush',
   selectedColor = 15, // Default to white
   onCharacterEdit,
+  onEyedropper,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [dragStarted, setDragStarted] = useState(false);
+  const [isAltPressed, setIsAltPressed] = useState(false);
 
   // Parse content into a 2D character grid
   const parseContent = useCallback((): string[][] => {
@@ -63,23 +66,34 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
   }, [frame?.colors, colorPalette]);
 
   // Handle character click/drag
-  const handleCharacterInteraction = useCallback((row: number, col: number) => {
-    if (!isEditMode || !onCharacterEdit) return;
+  const handleCharacterInteraction = useCallback((row: number, col: number, isEyedropper = false) => {
+    if (!isEditMode) return;
     
     const char = characterGrid[row]?.[col];
     if (!char || char === ' ') return; // Don't edit spaces
     
-    onCharacterEdit(row, col);
-  }, [isEditMode, onCharacterEdit, characterGrid]);
+    if (isEyedropper && onEyedropper) {
+      onEyedropper(row, col);
+    } else if (onCharacterEdit) {
+      onCharacterEdit(row, col);
+    }
+  }, [isEditMode, onCharacterEdit, onEyedropper, characterGrid]);
 
   // Mouse event handlers
-  const handleMouseDown = useCallback((row: number, col: number) => {
+  const handleMouseDown = useCallback((event: React.MouseEvent, row: number, col: number) => {
     if (!isEditMode) return;
+    
+    // Check for Alt key (eyedropper mode) and brush tool
+    if (event.altKey && selectedTool === 'brush') {
+      event.preventDefault();
+      handleCharacterInteraction(row, col, true);
+      return;
+    }
     
     setIsDragging(true);
     setDragStarted(true);
     handleCharacterInteraction(row, col);
-  }, [isEditMode, handleCharacterInteraction]);
+  }, [isEditMode, selectedTool, handleCharacterInteraction]);
 
   const handleMouseEnter = useCallback((row: number, col: number) => {
     if (!isDragging || !dragStarted) return;
@@ -99,6 +113,31 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
       return () => document.removeEventListener('mouseup', handleMouseUp);
     }
   }, [isDragging, handleMouseUp]);
+
+  // Keyboard event listeners for Alt key
+  useEffect(() => {
+    if (!isEditMode) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.altKey && selectedTool === 'brush') {
+        setIsAltPressed(true);
+      }
+    };
+
+    const handleKeyUp = (event: KeyboardEvent) => {
+      if (!event.altKey) {
+        setIsAltPressed(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keyup', handleKeyUp);
+    
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keyup', handleKeyUp);
+    };
+  }, [isEditMode, selectedTool]);
 
   useEffect(() => {
     // Simple fade-in effect
@@ -126,12 +165,16 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
             {row.map((char, colIndex) => (
               <span
                 key={`${rowIndex}-${colIndex}`}
-                className={`terminal-char ${isEditMode && char !== ' ' ? 'editable' : ''}`}
+                className={`terminal-char ${isEditMode && char !== ' ' ? 'editable' : ''} ${
+                  isEditMode && char !== ' ' && isAltPressed && selectedTool === 'brush' ? 'eyedropper-hover' : ''
+                }`}
                 style={{
                   color: getCharacterColor(rowIndex, colIndex),
-                  cursor: isEditMode && char !== ' ' ? 'pointer' : 'default'
+                  cursor: isEditMode && char !== ' ' 
+                    ? (isAltPressed && selectedTool === 'brush' ? 'crosshair' : 'pointer')
+                    : 'default'
                 }}
-                onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+                onMouseDown={(event) => handleMouseDown(event, rowIndex, colIndex)}
                 onMouseEnter={() => handleMouseEnter(rowIndex, colIndex)}
                 data-row={rowIndex}
                 data-col={colIndex}

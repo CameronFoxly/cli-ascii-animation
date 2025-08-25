@@ -184,6 +184,19 @@ const App: React.FC = () => {
     setForceUpdate(prev => prev + 1);
   }, [currentAnimationFrames, currentFrame, selectedTool, selectedColor, colorEditState, setForceUpdate]);
 
+  // Eyedropper handler
+  const handleEyedropper = useCallback((row: number, col: number) => {
+    if (!currentAnimationFrames) return;
+    
+    const frame = currentAnimationFrames.getFrame(currentFrame);
+    const position = `${row},${col}`;
+    const colorIndex = frame?.colors?.[position];
+    
+    if (colorIndex !== undefined && colorIndex >= 0 && colorIndex <= 15) {
+      setSelectedColor(colorIndex);
+    }
+  }, [currentAnimationFrames, currentFrame]);
+
   const handleUndo = useCallback(() => {
     if (!currentAnimationFrames) return;
     
@@ -311,6 +324,7 @@ const App: React.FC = () => {
             selectedTool={selectedTool}
             selectedColor={selectedColor}
             onCharacterEdit={handleCharacterEdit}
+            onEyedropper={handleEyedropper}
           />
           
           <Controls
