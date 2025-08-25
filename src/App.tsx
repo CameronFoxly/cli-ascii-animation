@@ -96,12 +96,65 @@ const App: React.FC = () => {
     setVersion(newVersion);
     
     // Only update frames if current animation supports version
-    if (animationSupportsVersion && currentAnimationId) {
+    if (animationSupportsVersion && currentAnimationId && currentAnimationFrames) {
+      // Preserve color data from current frames before updating
+      const colorData = extractColorData(currentAnimationFrames);
+      
       const frames = await animationRegistry.createAnimationFramesWithVersion(currentAnimationId, newVersion) || null;
       if (frames) {
+        // Apply preserved color data to new frames
+        applyColorData(frames, colorData);
+        
+        // Clear undo/redo history since frame references have changed
+        colorEditState.clearHistory();
+        
         setCurrentAnimationFrames(frames);
       }
     }
+  };
+
+  // Helper function to extract color data from all frames
+  const extractColorData = (animationFrames: AnimationFrames): Record<number, Record<string, number>> => {
+    const allFrames = animationFrames.getAllFrames();
+    const colorData: Record<number, Record<string, number>> = {};
+    
+    allFrames.forEach((frame, index) => {
+      if (frame.colors) {
+        colorData[index] = { ...frame.colors };
+      }
+    });
+    
+    return colorData;
+  };
+
+    // Helper function to apply color data to frames
+  const applyColorData = (animationFrames: AnimationFrames, colorData: Record<number, Record<string, number>>) => {
+    const allFrames = animationFrames.getAllFrames();
+    
+    allFrames.forEach((frame, index) => {
+      if (colorData[index]) {
+        if (!frame.colors) {
+          frame.colors = {};
+        }
+        // Apply preserved colors, but only if the position still exists in the new frame content
+        Object.entries(colorData[index]).forEach(([position, colorIndex]) => {
+          const [row, col] = position.split(',').map(Number);
+          if (isValidPosition(frame.content, row, col)) {
+            frame.colors![position] = colorIndex;
+          }
+        });
+      }
+    });
+  };
+
+  // Helper function to check if a position is valid in the frame content
+  const isValidPosition = (content: string, row: number, col: number): boolean => {
+    const lines = content.split('\n');
+    if (row < 0 || row >= lines.length) return false;
+    if (col < 0 || col >= lines[row].length) return false;
+    // Also check that there's actually a character at this position (not just whitespace)
+    const char = lines[row][col];
+    return char !== undefined;
   };
 
   const updateFrameDuration = (newDuration: number) => {
