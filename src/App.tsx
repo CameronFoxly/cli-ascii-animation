@@ -28,7 +28,7 @@ const App: React.FC = () => {
   const [selectedTool, setSelectedTool] = useState<'brush' | 'eraser' | 'bucket'>('brush');
   const [selectedColor, setSelectedColor] = useState<number>(15); // Default to white
   const [lastPaintedPosition, setLastPaintedPosition] = useState<{row: number, col: number} | null>(null);
-  const [, setForceUpdate] = useState(0); // For triggering re-renders
+  const [forceUpdate, setForceUpdate] = useState(0); // For triggering re-renders
   const [copiedColorData, setCopiedColorData] = useState<{[position: string]: number} | null>(null);
 
   const {
@@ -424,6 +424,7 @@ const App: React.FC = () => {
             selectedColor={selectedColor}
             onCharacterEdit={handleCharacterEdit}
             onEyedropper={handleEyedropper}
+            forceUpdateKey={forceUpdate}
           />
           
           <Controls

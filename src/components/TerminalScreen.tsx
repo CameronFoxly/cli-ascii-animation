@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import type { AnimationFrame } from '../animation-registry';
 import { ColorPalette } from '../color-palette';
 
@@ -13,6 +13,7 @@ interface TerminalScreenProps {
   selectedColor?: number;
   onCharacterEdit?: (row: number, col: number, isShiftClick?: boolean) => void;
   onEyedropper?: (row: number, col: number) => void;
+  forceUpdateKey?: number; // Add this to trigger re-renders when colors change
 }
 
 const TerminalScreen: React.FC<TerminalScreenProps> = ({
@@ -26,6 +27,7 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
   selectedColor = 15, // Default to white
   onCharacterEdit,
   onEyedropper,
+  forceUpdateKey = 0,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -54,17 +56,25 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
 
   const characterGrid = parseContent();
 
+  // Optimize color rendering with useMemo to prevent flash
+  const frameColorMap = useMemo(() => {
+    const colorMap = new Map<string, string>();
+    
+    if (frame?.colors) {
+      // Pre-calculate all colors that have been set
+      Object.entries(frame.colors).forEach(([position, colorIndex]) => {
+        colorMap.set(position, colorPalette.getCSSColor(colorIndex));
+      });
+    }
+    
+    return colorMap;
+  }, [frame?.colors, colorPalette, forceUpdateKey]);
+
   // Get color for a character at specific position
   const getCharacterColor = useCallback((row: number, col: number): string => {
     const position = `${row},${col}`;
-    const colorIndex = frame?.colors?.[position];
-    
-    if (colorIndex !== undefined) {
-      return colorPalette.getCSSColor(colorIndex);
-    }
-    
-    return '#ffffff'; // Default white
-  }, [frame?.colors, colorPalette]);
+    return frameColorMap.get(position) || '#ffffff';
+  }, [frameColorMap]);
 
   // Handle character click/drag
   const handleCharacterInteraction = useCallback((row: number, col: number, isEyedropper = false, isShiftClick = false) => {
@@ -160,8 +170,8 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
     };
   }, [isEditMode, selectedTool]);
 
+  // Simple opacity management for smooth transitions
   useEffect(() => {
-    // Simple fade-in effect
     if (containerRef.current) {
       requestAnimationFrame(() => {
         if (containerRef.current) {
@@ -169,7 +179,7 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
         }
       });
     }
-  }, []);
+  }, [frameColorMap]);
 
   return (
     <div
@@ -177,7 +187,7 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
       className={`terminal-screen-container ${isEditMode ? 'edit-mode' : ''}`}
       style={{ 
         opacity: '0', 
-        transition: 'opacity 0.3s ease-in'
+        transition: 'opacity 0.15s ease-in'
       }}
     >
       <div className="terminal-grid">

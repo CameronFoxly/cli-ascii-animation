@@ -144,7 +144,6 @@ body {
 .terminal-char {
   display: inline;
   white-space: pre;
-  transition: color 0.1s ease;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
