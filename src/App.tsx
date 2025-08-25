@@ -138,9 +138,22 @@ const App: React.FC = () => {
     // TODO: Implement redo
   }, []);
 
-  const handleColorPaletteChange = useCallback(() => {
-    // TODO: Implement palette color change
-  }, []);
+  const handleColorPaletteChange = useCallback((colorIndex: number, r: number, g: number, b: number) => {
+    colorPalette.setColor(colorIndex, { r, g, b });
+    // Force re-render to update the color display
+    setForceUpdate(prev => prev + 1);
+  }, [colorPalette]);
+
+  const handlePaletteLoad = useCallback((paletteColors: Array<{ r: number; g: number; b: number }>) => {
+    // Load all colors from the selected terminal palette
+    paletteColors.forEach((color, index) => {
+      if (index < 16) { // Ensure we don't exceed our 16-color palette
+        colorPalette.setColor(index, color);
+      }
+    });
+    // Force re-render to update the color display
+    setForceUpdate(prev => prev + 1);
+  }, [colorPalette]);
 
   const handleExportAnimation = useCallback(() => {
     if (!currentAnimationFrames) return;
@@ -230,6 +243,7 @@ const App: React.FC = () => {
             selectedColor={selectedColor}
             onColorSelect={setSelectedColor}
             onColorChange={handleColorPaletteChange}
+            onPaletteLoad={handlePaletteLoad}
           />
           
           <ColorEditorTools

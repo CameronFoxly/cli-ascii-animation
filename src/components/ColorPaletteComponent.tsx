@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ColorPalette, ANSI_COLOR_NAMES } from '../color-palette';
+import { TERMINAL_PALETTES, getDefaultTerminalPalette } from './palette-library';
 
 interface ColorPaletteComponentProps {
   colorPalette: ColorPalette;
   selectedColor: number;
   onColorSelect: (colorIndex: number) => void;
   onColorChange?: (colorIndex: number, r: number, g: number, b: number) => void;
+  onPaletteLoad?: (paletteColors: Array<{ r: number; g: number; b: number }>) => void;
 }
 
 const ColorPaletteComponent: React.FC<ColorPaletteComponentProps> = ({
@@ -13,7 +15,10 @@ const ColorPaletteComponent: React.FC<ColorPaletteComponentProps> = ({
   selectedColor,
   onColorSelect,
   onColorChange,
+  onPaletteLoad,
 }) => {
+  const [selectedTerminal, setSelectedTerminal] = useState<string>(getDefaultTerminalPalette().name);
+
   const handleColorClick = (index: number) => {
     onColorSelect(index);
   };
@@ -29,6 +34,16 @@ const ColorPaletteComponent: React.FC<ColorPaletteComponentProps> = ({
     onColorChange(index, r, g, b);
   };
 
+  const handleTerminalPaletteChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const terminalName = event.target.value;
+    setSelectedTerminal(terminalName);
+    
+    const terminalPalette = TERMINAL_PALETTES.find(palette => palette.name === terminalName);
+    if (terminalPalette && onPaletteLoad) {
+      onPaletteLoad(terminalPalette.colors);
+    }
+  };
+
   const rgbToHex = (r: number, g: number, b: number): string => {
     return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
   };
@@ -36,6 +51,23 @@ const ColorPaletteComponent: React.FC<ColorPaletteComponentProps> = ({
   return (
     <div className="color-palette">
       <h3>Color Palette</h3>
+      
+      <div className="terminal-palette-selector">
+        <label htmlFor="terminal-select">Terminal Palette:</label>
+        <select 
+          id="terminal-select"
+          value={selectedTerminal}
+          onChange={handleTerminalPaletteChange}
+          className="terminal-select"
+        >
+          {TERMINAL_PALETTES.map((palette) => (
+            <option key={palette.name} value={palette.name}>
+              {palette.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="color-grid">
         {Array.from({ length: 16 }, (_, index) => {
           const color = colorPalette.getColor(index);

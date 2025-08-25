@@ -223,6 +223,43 @@ body {
   font-family: 'Fira Code', monospace;
 }
 
+/* Terminal Palette Selector Styles */
+.terminal-palette-selector {
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #444;
+}
+
+.terminal-palette-selector label {
+  display: block;
+  color: #ffffff;
+  font-size: 12px;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.terminal-select {
+  width: 100%;
+  background-color: #1a1a1a;
+  color: #ffffff;
+  border: 1px solid #555;
+  border-radius: 3px;
+  padding: 6px 8px;
+  font-size: 11px;
+  font-family: 'Fira Code', monospace;
+  cursor: pointer;
+}
+
+.terminal-select:hover {
+  border-color: #777;
+}
+
+.terminal-select:focus {
+  outline: none;
+  border-color: rgb(156, 114, 219);
+  box-shadow: 0 0 4px rgba(156, 114, 219, 0.3);
+}
+
 /* Color Editor Tools Styles */
 .color-editor-tools {
   background-color: #2a2a2a;
