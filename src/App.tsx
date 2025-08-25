@@ -29,6 +29,7 @@ const App: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<number>(15); // Default to white
   const [lastPaintedPosition, setLastPaintedPosition] = useState<{row: number, col: number} | null>(null);
   const [, setForceUpdate] = useState(0); // For triggering re-renders
+  const [copiedColorData, setCopiedColorData] = useState<{[position: string]: number} | null>(null);
 
   const {
     currentFrame,
@@ -276,6 +277,73 @@ const App: React.FC = () => {
     }
   }, [currentAnimationFrames, currentFrame]);
 
+  const handleCopyColorData = useCallback(() => {
+    if (!currentAnimationFrames) return;
+    
+    const currentFrameData = currentAnimationFrames.getFrame(currentFrame);
+    if (!currentFrameData || !currentFrameData.colors) {
+      setCopiedColorData({});
+      console.log('No color data to copy from current frame');
+      return;
+    }
+    
+    // Copy only foreground colors
+    setCopiedColorData({...currentFrameData.colors});
+    console.log('Color data copied from frame', currentFrame + 1);
+  }, [currentAnimationFrames, currentFrame]);
+
+  const handlePasteColorData = useCallback(() => {
+    if (!currentAnimationFrames || !copiedColorData) {
+      console.log('No color data to paste');
+      return;
+    }
+
+    const currentFrameData = currentAnimationFrames.getFrame(currentFrame);
+    if (!currentFrameData) return;
+
+    // Start a new edit batch for undo/redo functionality
+    colorEditState.startBatch();
+
+    // Get the frame content to check which positions have characters
+    const frameContent = currentFrameData.content;
+    const lines = frameContent.split('\n');
+
+    // Apply colors based on position, only where characters exist
+    Object.entries(copiedColorData).forEach(([position, color]) => {
+      const [row, col] = position.split(',').map(Number);
+      
+      // Check if this position has a character (not a space)
+      if (lines[row] && col < lines[row].length) {
+        const character = lines[row][col];
+        if (character && character !== ' ') {
+          // Record the previous color for undo functionality
+          const previousColor = currentFrameData.colors?.[position];
+          
+          colorEditState.addAction({
+            type: 'paint',
+            position,
+            previousColor,
+            newColor: color,
+            frameIndex: currentFrame
+          });
+
+          // Apply the color
+          if (!currentFrameData.colors) {
+            currentFrameData.colors = {};
+          }
+          currentFrameData.colors[position] = color;
+        }
+      }
+    });
+
+    // Commit the batch for undo/redo
+    colorEditState.commitBatch();
+
+    // Force re-render to show the changes
+    setForceUpdate(prev => prev + 1);
+    console.log('Color data pasted to frame', currentFrame + 1);
+  }, [currentAnimationFrames, currentFrame, copiedColorData, colorEditState]);
+
   const handleColorPaletteChange = useCallback((colorIndex: number, r: number, g: number, b: number) => {
     colorPalette.setColor(colorIndex, { r, g, b });
     // Force re-render to update the color display
@@ -391,6 +459,9 @@ const App: React.FC = () => {
             onUndo={handleUndo}
             onRedo={handleRedo}
             onCopyFrame={handleCopyFrame}
+            onCopyColorData={handleCopyColorData}
+            onPasteColorData={handlePasteColorData}
+            hasCopiedColorData={copiedColorData !== null}
             onExport={handleExportAnimation}
           />
         </div>

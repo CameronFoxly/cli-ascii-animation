@@ -8,6 +8,9 @@ interface ColorEditorToolsProps {
   onUndo: () => void;
   onRedo: () => void;
   onCopyFrame: () => void;
+  onCopyColorData: () => void;
+  onPasteColorData: () => void;
+  hasCopiedColorData: boolean;
   onExport: () => void;
 }
 
@@ -19,6 +22,9 @@ const ColorEditorTools: React.FC<ColorEditorToolsProps> = ({
   onUndo,
   onRedo,
   onCopyFrame,
+  onCopyColorData,
+  onPasteColorData,
+  hasCopiedColorData,
   onExport,
 }) => {
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -101,9 +107,27 @@ const ColorEditorTools: React.FC<ColorEditorToolsProps> = ({
           <button
             className="action-button"
             onClick={onCopyFrame}
-            title="Copy current frame to clipboard"
+            title="Copy current frame text to clipboard"
           >
-            📋 Copy Frame
+            📋 Copy Text
+          </button>
+        </div>
+        
+        <div className="color-action-buttons">
+          <button
+            className="action-button"
+            onClick={onCopyColorData}
+            title="Copy color data from current frame"
+          >
+            🎨 Copy Colors
+          </button>
+          <button
+            className="action-button"
+            onClick={onPasteColorData}
+            disabled={!hasCopiedColorData}
+            title="Paste color data to current frame"
+          >
+            🖌️ Paste Colors
           </button>
         </div>
       </div>

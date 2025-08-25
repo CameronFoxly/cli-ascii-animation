@@ -346,9 +346,15 @@ body {
 }
 
 .tool-buttons,
-.action-buttons {
+.action-buttons,
+.color-action-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
+}
+
+.color-action-buttons {
+  margin-top: 10px;
 }
 
 .tool-button,
@@ -364,6 +370,8 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   min-width: 80px;
+  flex: 0 0 auto;
+  text-align: center;
 }
 
 .tool-button:hover,
