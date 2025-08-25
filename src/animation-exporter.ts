@@ -90,7 +90,8 @@ ${frames}
   };
 }
 
-export default createAnimation;
+const animation: Animation = createAnimation();
+export default animation;
 `;
   }
 
