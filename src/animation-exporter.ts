@@ -41,16 +41,77 @@ ${colorEntries.join(',\n')}
   }
 
   /**
+   * Check if content contains template literal expressions
+   */
+  private containsTemplateLiterals(content: string): boolean {
+    return /\$\{[^}]+\}/.test(content);
+  }
+
+  /**
+   * Convert resolved version strings back to template literal syntax
+   */
+  private convertVersionToTemplateLiteral(content: string): string {
+    // Pattern to match "CLI Version X.X.X" followed by spaces
+    const versionPattern = /CLI Version \d+\.\d+\.\d+(\s+)/g;
+    
+    return content.replace(versionPattern, (_, spaces) => {
+      const spaceCount = spaces.length;
+      return `\${createVersionLine(version, ${spaceCount})}`;
+    });
+  }
+
+  /**
    * Generate a frame object string
    */
   private generateFrame(frame: AnimationFrame): string {
     const colorsString = this.generateFrameColors(frame.colors);
     
+    let processedContent = frame.content;
+    
+    // If content contains template literals, preserve them
+    if (this.containsTemplateLiterals(frame.content)) {
+      processedContent = frame.content;
+    } else {
+      // Try to convert resolved version strings back to template literals
+      processedContent = this.convertVersionToTemplateLiteral(frame.content);
+    }
+    
+    const contentString = `\`${processedContent}\``;
+    
     return `  {
     title: "${frame.title}",
     duration: ${frame.duration},
-    content: \`${frame.content}\`${colorsString}
+    content: ${contentString}${colorsString}
   }`;
+  }
+
+  /**
+   * Generate helper functions needed by the animation
+   */
+  private generateHelperFunctions(animation: Animation): string {
+    // Check if any frame contains createVersionLine usage (either original or converted)
+    const hasVersionLine = animation.frames.some(frame => {
+      const originalHasVersionLine = frame.content.includes('createVersionLine');
+      const convertedContent = this.convertVersionToTemplateLiteral(frame.content);
+      const convertedHasVersionLine = convertedContent.includes('createVersionLine');
+      return originalHasVersionLine || convertedHasVersionLine;
+    });
+
+    if (hasVersionLine) {
+      return `
+  // Helper function to create properly spaced version string for alignment
+  const createVersionLine = (version: string, spacesAfterVersion: number): string => {
+    // Calculate the total width needed: "CLI Version " + version + spaces to maintain alignment
+    const baseText = \`CLI Version \${version}\`;
+    const targetWidth = 'CLI Version 0.0.1'.length + spacesAfterVersion; // Use default version as baseline
+    const currentWidth = baseText.length;
+    const paddingNeeded = Math.max(0, targetWidth - currentWidth);
+    return baseText + ' '.repeat(paddingNeeded);
+  };
+`;
+    }
+
+    return '';
   }
 
   /**
@@ -58,6 +119,7 @@ ${colorEntries.join(',\n')}
    */
   generateAnimationFile(animation: Animation, version: string = '0.0.1'): string {
     const colorConstants = this.generateColorConstants();
+    const helperFunctions = this.generateHelperFunctions(animation);
     const frames = animation.frames.map((frame) => 
       this.generateFrame(frame)
     ).join(',\n');
@@ -75,7 +137,7 @@ import type { Animation, AnimationFrame } from '../animation-registry';
 // Color constants for easy reference
 ${colorConstants}
 
-export function createAnimation(version: string = '${version}'): Animation {
+export function createAnimation(version: string = '${version}'): Animation {${helperFunctions}
   const frames: AnimationFrame[] = [
 ${frames}
   ];

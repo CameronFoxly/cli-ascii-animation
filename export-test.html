@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Export Test</title>
+</head>
+<body>
+    <h1>Animation Export Test</h1>
+    <p>Check the console for export output</p>
+    
+    <script type="module">
+        // Simulate the animation exporter functionality
+        
+        // Simulate a frame that has been processed (version already resolved)
+        const simulatedFrame = {
+            title: "Frame 7",
+            duration: 80,
+            content: `┌──                                                               ──┐           
+│                                                   ▄▄█████▄        │           
+    Welcome to GitHub                             ▄███████████▄                  
+    █████┐ █████┐ █████┐ ██┐██┐ |   █████┐ █████▐███████████████▄               
+   ██┌───┘██┌──██┐██┌─██┐██│██│- - ██┌──██┐└─██┌▐██████████  ▀███               
+   ██│    ██│  ██│█████┌┘██│██│ |  ██│  ██│  ██│███████████▄  ███               
+   ██│    ██│  ██│██┌──┘ ██│██│    ██│  ██│  ██│▀█  █████  ▀████                
+   └█████┐└█████┌┘██│    ██│██████┐└█████┌┘  ██│ ▀██████▌    ▄ ▌                
+    └────┘ └────┘ └─┘    └─┘└─────┘ └────┘   └─┘   ▀████     ▀▐                 
+│                              CLI Version 0.0.1     ▀▀██▄▄▄▄▄▀     │           
+└──                                                               ──┘`
+        };
+
+        // Test the version detection and conversion
+        const versionPattern = /CLI Version \d+\.\d+\.\d+(\s+)/g;
+        const convertVersionToTemplateLiteral = (content) => {
+            return content.replace(versionPattern, (_, spaces) => {
+                const spaceCount = spaces.length;
+                return `\${createVersionLine(version, ${spaceCount})}`;
+            });
+        };
+
+        console.log('Original frame content (excerpt):');
+        const lines = simulatedFrame.content.split('\n');
+        const versionLine = lines.find(line => line.includes('CLI Version'));
+        console.log(versionLine);
+
+        console.log('\nAfter conversion:');
+        const converted = convertVersionToTemplateLiteral(simulatedFrame.content);
+        const convertedLines = converted.split('\n');
+        const convertedVersionLine = convertedLines.find(line => line.includes('createVersionLine'));
+        console.log(convertedVersionLine);
+
+        console.log('\nFull converted frame content would be:');
+        console.log(`{
+  title: "${simulatedFrame.title}",
+  duration: ${simulatedFrame.duration},
+  content: \`${converted}\`
+}`);
+
+        // Test if the helper function would be included
+        const hasVersionLine = converted.includes('createVersionLine');
+        console.log('\nWould include helper function:', hasVersionLine);
+
+        if (hasVersionLine) {
+            console.log('\nHelper function that would be included:');
+            console.log(`// Helper function to create properly spaced version string for alignment
+const createVersionLine = (version: string, spacesAfterVersion: number): string => {
+  // Calculate the total width needed: "CLI Version " + version + spaces to maintain alignment
+  const baseText = \`CLI Version \${version}\`;
+  const targetWidth = 'CLI Version 0.0.1'.length + spacesAfterVersion; // Use default version as baseline
+  const currentWidth = baseText.length;
+  const paddingNeeded = Math.max(0, targetWidth - currentWidth);
+  return baseText + ' '.repeat(paddingNeeded);
+};`);
+        }
+    </script>
+</body>
+</html>
