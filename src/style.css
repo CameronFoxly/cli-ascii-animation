@@ -125,6 +125,10 @@ body {
   margin-bottom: 20px;
   white-space: pre;
   overflow: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .terminal-grid {
@@ -141,6 +145,10 @@ body {
   display: inline;
   white-space: pre;
   transition: color 0.1s ease;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .terminal-char.editable {

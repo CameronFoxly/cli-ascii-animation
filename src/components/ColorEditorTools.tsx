@@ -7,6 +7,7 @@ interface ColorEditorToolsProps {
   canRedo: boolean;
   onUndo: () => void;
   onRedo: () => void;
+  onCopyFrame: () => void;
   onExport: () => void;
 }
 
@@ -17,6 +18,7 @@ const ColorEditorTools: React.FC<ColorEditorToolsProps> = ({
   canRedo,
   onUndo,
   onRedo,
+  onCopyFrame,
   onExport,
 }) => {
   const handleKeyDown = (event: React.KeyboardEvent) => {
@@ -88,6 +90,13 @@ const ColorEditorTools: React.FC<ColorEditorToolsProps> = ({
             title="Redo (Cmd+Shift+Z)"
           >
             ↷ Redo
+          </button>
+          <button
+            className="action-button"
+            onClick={onCopyFrame}
+            title="Copy current frame to clipboard"
+          >
+            📋 Copy Frame
           </button>
         </div>
       </div>

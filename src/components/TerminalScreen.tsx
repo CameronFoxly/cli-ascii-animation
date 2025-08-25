@@ -117,8 +117,7 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
       className={`terminal-screen-container ${isEditMode ? 'edit-mode' : ''}`}
       style={{ 
         opacity: '0', 
-        transition: 'opacity 0.3s ease-in',
-        userSelect: 'none'
+        transition: 'opacity 0.3s ease-in'
       }}
     >
       <div className="terminal-grid">

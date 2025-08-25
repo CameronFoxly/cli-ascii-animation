@@ -129,14 +129,53 @@ const App: React.FC = () => {
     setForceUpdate(prev => prev + 1);
   }, [currentAnimationFrames, currentFrame, selectedTool, selectedColor, colorEditState, setForceUpdate]);
 
-  // Placeholder handlers to prevent errors
   const handleUndo = useCallback(() => {
-    // TODO: Implement undo
-  }, []);
+    if (!currentAnimationFrames) return;
+    
+    const frames = currentAnimationFrames.getAllFrames();
+    const success = colorEditState.undo(frames);
+    
+    if (success) {
+      // Force re-render to show the undone changes
+      setForceUpdate(prev => prev + 1);
+    }
+  }, [currentAnimationFrames, colorEditState]);
 
   const handleRedo = useCallback(() => {
-    // TODO: Implement redo
-  }, []);
+    if (!currentAnimationFrames) return;
+    
+    const frames = currentAnimationFrames.getAllFrames();
+    const success = colorEditState.redo(frames);
+    
+    if (success) {
+      // Force re-render to show the redone changes
+      setForceUpdate(prev => prev + 1);
+    }
+  }, [currentAnimationFrames, colorEditState]);
+
+  const handleCopyFrame = useCallback(async () => {
+    if (!currentAnimationFrames) return;
+    
+    try {
+      const frameText = currentAnimationFrames.getFrameText(currentFrame);
+      await navigator.clipboard.writeText(frameText);
+      console.log('Frame copied to clipboard');
+    } catch (error) {
+      console.error('Failed to copy frame to clipboard:', error);
+      // Fallback for older browsers or when clipboard API is not available
+      const textArea = document.createElement('textarea');
+      textArea.value = currentAnimationFrames.getFrameText(currentFrame);
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        console.log('Frame copied to clipboard (fallback)');
+      } catch (fallbackError) {
+        console.error('Fallback copy failed:', fallbackError);
+      }
+      document.body.removeChild(textArea);
+    }
+  }, [currentAnimationFrames, currentFrame]);
 
   const handleColorPaletteChange = useCallback((colorIndex: number, r: number, g: number, b: number) => {
     colorPalette.setColor(colorIndex, { r, g, b });
@@ -253,6 +292,7 @@ const App: React.FC = () => {
             canRedo={colorEditState.canRedo()}
             onUndo={handleUndo}
             onRedo={handleRedo}
+            onCopyFrame={handleCopyFrame}
             onExport={handleExportAnimation}
           />
         </div>
