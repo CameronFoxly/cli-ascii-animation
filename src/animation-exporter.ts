@@ -10,15 +10,41 @@ import { ANSI_COLOR_NAMES } from './color-palette';
 
 export class AnimationExporter {
   /**
-   * Generate color helper constants for the animation file
+   * Get all unique color indices used in the animation
    */
-  private generateColorConstants(): string {
-    const constants = ANSI_COLOR_NAMES.map((name, index) => {
-      const constantName = name.toUpperCase().replace(/\s+/g, '_');
-      return `const ${constantName} = ${index};`;
+  private getUsedColorIndices(animation: Animation): Set<number> {
+    const usedColors = new Set<number>();
+    
+    animation.frames.forEach(frame => {
+      if (frame.colors) {
+        Object.values(frame.colors).forEach(colorIndex => {
+          usedColors.add(colorIndex);
+        });
+      }
     });
     
-    return constants.join('\n');
+    return usedColors;
+  }
+
+  /**
+   * Generate color helper constants for the animation file (only for used colors)
+   */
+  private generateColorConstants(animation: Animation): string {
+    const usedColorIndices = this.getUsedColorIndices(animation);
+    
+    if (usedColorIndices.size === 0) {
+      return ''; // No colors used, no constants needed
+    }
+    
+    const constants = Array.from(usedColorIndices)
+      .sort((a, b) => a - b) // Sort by color index for consistent output
+      .map(index => {
+        const name = ANSI_COLOR_NAMES[index];
+        const constantName = name.toUpperCase().replace(/\s+/g, '_');
+        return `const ${constantName} = ${index};`;
+      });
+    
+    return constants.length > 0 ? constants.join('\n') : '';
   }
 
   /**
@@ -118,13 +144,18 @@ ${colorEntries.join(',\n')}
    * Generate the complete animation file content
    */
   generateAnimationFile(animation: Animation, version: string = '0.0.1'): string {
-    const colorConstants = this.generateColorConstants();
+    const colorConstants = this.generateColorConstants(animation);
     const helperFunctions = this.generateHelperFunctions(animation);
     const frames = animation.frames.map((frame) => 
       this.generateFrame(frame)
     ).join(',\n');
 
     const description = animation.metadata.description || 'Custom animation created with color editor';
+
+    const colorSection = colorConstants ? `
+// Color constants for easy reference
+${colorConstants}
+` : '';
 
     return `/**
  * ${animation.metadata.name}
@@ -133,10 +164,7 @@ ${colorEntries.join(',\n')}
  */
 
 import type { Animation, AnimationFrame } from '../animation-registry';
-
-// Color constants for easy reference
-${colorConstants}
-
+${colorSection}
 export function createAnimation(version: string = '${version}'): Animation {${helperFunctions}
   const frames: AnimationFrame[] = [
 ${frames}
