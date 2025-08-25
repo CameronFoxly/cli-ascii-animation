@@ -166,6 +166,8 @@ export class AnimationFrames {
 
 export class AnimationRegistry {
   private animations: Map<string, Animation> = new Map();
+  private versionSupportMap: Map<string, boolean> = new Map();
+  private animationModules: Map<string, any> = new Map();
   private defaultAnimationId: string = 'animation-01';
 
   /**
@@ -182,6 +184,11 @@ export class AnimationRegistry {
         
         if (animation && animation.metadata && animation.frames) {
           this.animations.set(animation.metadata.id, animation);
+          this.animationModules.set(animation.metadata.id, module);
+          
+          // Check if this module has a createAnimation function for version support
+          const hasCreateAnimation = typeof module.createAnimation === 'function';
+          this.versionSupportMap.set(animation.metadata.id, hasCreateAnimation);
         } else {
           console.warn(`Invalid animation module at ${path}: missing metadata or frames`);
         }
@@ -252,18 +259,32 @@ export class AnimationRegistry {
   }
 
   /**
-   * Create an AnimationFrames instance for animation-01 with a custom version
-   * @param version - The version string to display in the animation
-   * @returns Promise that resolves to AnimationFrames instance for animation-01 with custom version
+   * Check if an animation supports version parameters
+   * @param id - The animation ID
+   * @returns Promise that resolves to true if the animation supports version parameters
    */
-  public async createAnimationFramesWithVersion(version: string): Promise<AnimationFrames | undefined> {
+  public async supportsVersion(id: string): Promise<boolean> {
+    return this.versionSupportMap.get(id) || false;
+  }
+
+  /**
+   * Create an AnimationFrames instance for any animation with a custom version
+   * @param id - The animation ID
+   * @param version - The version string to display in the animation
+   * @returns Promise that resolves to AnimationFrames instance with custom version
+   */
+  public async createAnimationFramesWithVersion(id: string, version: string): Promise<AnimationFrames | undefined> {
     try {
-      // Import the createAnimation function for animation-01
-      const module = await import('./animations/animation-01');
-      const animation = module.createAnimation(version);
-      return new AnimationFrames(animation.frames);
+      const module = this.animationModules.get(id);
+      if (module && typeof module.createAnimation === 'function') {
+        const animation = module.createAnimation(version);
+        return new AnimationFrames(animation.frames);
+      } else {
+        // Fall back to regular animation if no createAnimation function
+        return this.createAnimationFrames(id);
+      }
     } catch (error) {
-      console.error('Failed to create animation with version:', error);
+      console.error(`Failed to create animation ${id} with version:`, error);
       return undefined;
     }
   }

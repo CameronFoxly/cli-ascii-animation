@@ -16,6 +16,7 @@ const App: React.FC = () => {
   const [animationRegistry] = useState(() => new AnimationRegistry());
   const [currentAnimationFrames, setCurrentAnimationFrames] = useState<AnimationFrames | null>(null);
   const [currentAnimationId, setCurrentAnimationId] = useState<string>('');
+  const [animationSupportsVersion, setAnimationSupportsVersion] = useState<boolean>(false);
   const [version, setVersion] = useState<string>('0.0.1');
   const [frameDuration, setFrameDuration] = useState<number>(100);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -48,12 +49,12 @@ const App: React.FC = () => {
         const defaultId = animationRegistry.getDefaultAnimationId();
         setCurrentAnimationId(defaultId);
         
-        let frames: AnimationFrames | null = null;
-        if (defaultId === 'animation-01') {
-          frames = await animationRegistry.createAnimationFramesWithVersion('0.0.1') || null;
-        } else {
-          frames = animationRegistry.createAnimationFrames(defaultId) || null;
-        }
+        // Check if default animation supports version
+        const supportsVersion = await animationRegistry.supportsVersion(defaultId);
+        setAnimationSupportsVersion(supportsVersion);
+        
+        // Load frames with version support
+        const frames = await animationRegistry.createAnimationFramesWithVersion(defaultId, version) || null;
         
         if (frames) {
           setCurrentAnimationFrames(frames);
@@ -79,12 +80,12 @@ const App: React.FC = () => {
   const handleAnimationChange = async (animationId: string) => {
     setCurrentAnimationId(animationId);
     
-    let frames: AnimationFrames | null = null;
-    if (animationId === 'animation-01') {
-      frames = await animationRegistry.createAnimationFramesWithVersion(version) || null;
-    } else {
-      frames = animationRegistry.createAnimationFrames(animationId) || null;
-    }
+    // Check if the animation supports version parameters
+    const supportsVersion = await animationRegistry.supportsVersion(animationId);
+    setAnimationSupportsVersion(supportsVersion);
+    
+    // Create frames with version if supported, otherwise use regular method
+    const frames = await animationRegistry.createAnimationFramesWithVersion(animationId, version) || null;
     
     if (frames) {
       setCurrentAnimationFrames(frames);
@@ -94,8 +95,9 @@ const App: React.FC = () => {
   const handleVersionChange = async (newVersion: string) => {
     setVersion(newVersion);
     
-    if (currentAnimationId === 'animation-01') {
-      const frames = await animationRegistry.createAnimationFramesWithVersion(newVersion) || null;
+    // Only update frames if current animation supports version
+    if (animationSupportsVersion && currentAnimationId) {
+      const frames = await animationRegistry.createAnimationFramesWithVersion(currentAnimationId, newVersion) || null;
       if (frames) {
         setCurrentAnimationFrames(frames);
       }
@@ -242,13 +244,11 @@ const App: React.FC = () => {
             onAnimationChange={handleAnimationChange}
           />
           
-          <VersionControl
-            isVisible={currentAnimationId === 'animation-01'}
-            version={version}
-            onVersionChange={handleVersionChange}
-          />
-          
-          <TerminalScreen
+      <VersionControl
+        isVisible={animationSupportsVersion}
+        version={version}
+        onVersionChange={handleVersionChange}
+      />          <TerminalScreen
             content={currentAnimationFrames.getFrameText(currentFrame)}
             rows={rows}
             cols={cols}
