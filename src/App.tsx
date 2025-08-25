@@ -25,7 +25,7 @@ const App: React.FC = () => {
   const [colorPalette] = useState(() => new ColorPalette());
   const [colorEditState] = useState(() => new ColorEditState());
   const [animationExporter] = useState(() => new AnimationExporter());
-  const [selectedTool, setSelectedTool] = useState<'brush' | 'eraser'>('brush');
+  const [selectedTool, setSelectedTool] = useState<'brush' | 'eraser' | 'bucket'>('brush');
   const [selectedColor, setSelectedColor] = useState<number>(15); // Default to white
   const [lastPaintedPosition, setLastPaintedPosition] = useState<{row: number, col: number} | null>(null);
   const [, setForceUpdate] = useState(0); // For triggering re-renders
@@ -191,6 +191,18 @@ const App: React.FC = () => {
       }
       // Update last painted position for future line painting
       setLastPaintedPosition({ row, col });
+    } else if (selectedTool === 'bucket') {
+      // Flood fill from clicked position
+      colorEditState.floodFill(
+        frames, 
+        currentFrame, 
+        row, 
+        col, 
+        selectedColor,
+        currentAnimationFrames.getFrameText(currentFrame)
+      );
+      // Clear last painted position when using bucket tool
+      setLastPaintedPosition(null);
     } else {
       colorEditState.eraseCharacter(frames, currentFrame, row, col);
       // Clear last painted position when erasing

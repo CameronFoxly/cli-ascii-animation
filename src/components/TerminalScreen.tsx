@@ -9,7 +9,7 @@ interface TerminalScreenProps {
   frame?: AnimationFrame;
   colorPalette: ColorPalette;
   isEditMode?: boolean;
-  selectedTool?: 'brush' | 'eraser';
+  selectedTool?: 'brush' | 'eraser' | 'bucket';
   selectedColor?: number;
   onCharacterEdit?: (row: number, col: number, isShiftClick?: boolean) => void;
   onEyedropper?: (row: number, col: number) => void;
@@ -84,20 +84,27 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
   const handleMouseDown = useCallback((event: React.MouseEvent, row: number, col: number) => {
     if (!isEditMode) return;
     
-    // Check for Alt key (eyedropper mode) and brush tool
-    if (event.altKey && selectedTool === 'brush') {
+    // Check for Alt key (eyedropper mode) for brush and bucket tools
+    if (event.altKey && (selectedTool === 'brush' || selectedTool === 'bucket')) {
       event.preventDefault();
       handleCharacterInteraction(row, col, true);
       return;
     }
     
-    // Check for Shift key (line painting mode) and brush tool
+    // Check for Shift key (line painting mode) and brush tool only
     if (event.shiftKey && selectedTool === 'brush') {
       event.preventDefault();
       handleCharacterInteraction(row, col, false, true);
       return;
     }
     
+    // For bucket tool, just do a single click (no dragging)
+    if (selectedTool === 'bucket') {
+      handleCharacterInteraction(row, col);
+      return;
+    }
+    
+    // For brush and eraser, enable dragging
     setIsDragging(true);
     setDragStarted(true);
     handleCharacterInteraction(row, col);
@@ -127,7 +134,7 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
     if (!isEditMode) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.altKey && selectedTool === 'brush') {
+      if (event.altKey && (selectedTool === 'brush' || selectedTool === 'bucket')) {
         setIsAltPressed(true);
       }
       if (event.shiftKey && selectedTool === 'brush') {
@@ -180,15 +187,18 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
               <span
                 key={`${rowIndex}-${colIndex}`}
                 className={`terminal-char ${isEditMode && char !== ' ' ? 'editable' : ''} ${
-                  isEditMode && char !== ' ' && isAltPressed && selectedTool === 'brush' ? 'eyedropper-hover' : ''
+                  isEditMode && char !== ' ' && isAltPressed && (selectedTool === 'brush' || selectedTool === 'bucket') ? 'eyedropper-hover' : ''
                 } ${
                   isEditMode && char !== ' ' && isShiftPressed && selectedTool === 'brush' ? 'line-mode-hover' : ''
+                } ${
+                  isEditMode && char !== ' ' && selectedTool === 'bucket' && !isAltPressed ? 'bucket-hover' : ''
                 }`}
                 style={{
                   color: getCharacterColor(rowIndex, colIndex),
                   cursor: isEditMode && char !== ' ' 
-                    ? (isAltPressed && selectedTool === 'brush' ? 'crosshair' 
+                    ? (isAltPressed && (selectedTool === 'brush' || selectedTool === 'bucket') ? 'crosshair' 
                       : isShiftPressed && selectedTool === 'brush' ? 'crosshair'
+                      : selectedTool === 'bucket' ? 'crosshair'
                       : 'pointer')
                     : 'default'
                 }}

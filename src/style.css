@@ -180,6 +180,17 @@ body {
   box-shadow: 0 0 2px rgba(0, 255, 128, 0.5);
 }
 
+/* Bucket tool hover effect */
+.terminal-screen-container.edit-mode .terminal-char.editable:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.terminal-screen-container.edit-mode .terminal-char.editable.bucket-hover {
+  background-color: rgba(255, 193, 7, 0.2);
+  cursor: crosshair;
+  box-shadow: 0 0 2px rgba(255, 193, 7, 0.5);
+}
+
 /* Color Palette Styles */
 .color-palette {
   background-color: #2a2a2a;

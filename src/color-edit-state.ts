@@ -239,6 +239,91 @@ export class ColorEditState {
   }
 
   /**
+   * Flood fill (paint bucket) at a specific position
+   */
+  floodFill(
+    frames: AnimationFrame[], 
+    frameIndex: number, 
+    startRow: number, 
+    startCol: number, 
+    newColorIndex: number,
+    frameContent: string
+  ): void {
+    const frame = frames[frameIndex];
+    if (!frame) return;
+
+    // Get the target color to replace
+    const startPosition = `${startRow},${startCol}`;
+    const targetColor = frame.colors?.[startPosition];
+    
+    // Don't fill if target color is already the new color
+    if (targetColor === newColorIndex) return;
+
+    // Get all positions to fill using flood fill algorithm
+    const positionsToFill = this.getFloodFillPositions(
+      frameContent,
+      frame,
+      startRow,
+      startCol,
+      targetColor
+    );
+
+    // Paint all positions
+    for (const [row, col] of positionsToFill) {
+      this.paintCharacter(frames, frameIndex, row, col, newColorIndex);
+    }
+  }
+
+  /**
+   * Get all positions to fill using 4-directional flood fill
+   */
+  private getFloodFillPositions(
+    frameContent: string,
+    frame: AnimationFrame,
+    startRow: number,
+    startCol: number,
+    targetColor: number | undefined
+  ): Array<[number, number]> {
+    const lines = frameContent.split('\n');
+    const visited = new Set<string>();
+    const positions: Array<[number, number]> = [];
+    const queue: Array<[number, number]> = [[startRow, startCol]];
+
+    while (queue.length > 0) {
+      const [row, col] = queue.shift()!;
+      const positionKey = `${row},${col}`;
+
+      // Skip if already visited
+      if (visited.has(positionKey)) continue;
+      visited.add(positionKey);
+
+      // Check bounds
+      if (row < 0 || row >= lines.length || col < 0 || col >= (lines[row]?.length || 0)) {
+        continue;
+      }
+
+      // Only process non-space characters
+      const char = lines[row]?.[col];
+      if (!char || char === ' ') continue;
+
+      // Check if this position has the target color
+      const currentColor = frame.colors?.[positionKey];
+      if (currentColor !== targetColor) continue;
+
+      // Add this position to fill
+      positions.push([row, col]);
+
+      // Add neighbors to queue (4-directional)
+      queue.push([row - 1, col]); // up
+      queue.push([row + 1, col]); // down
+      queue.push([row, col - 1]); // left
+      queue.push([row, col + 1]); // right
+    }
+
+    return positions;
+  }
+
+  /**
    * Erase color at a specific position
    */
   eraseCharacter(

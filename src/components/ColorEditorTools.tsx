@@ -1,8 +1,8 @@
 import React from 'react';
 
 interface ColorEditorToolsProps {
-  selectedTool: 'brush' | 'eraser';
-  onToolChange: (tool: 'brush' | 'eraser') => void;
+  selectedTool: 'brush' | 'eraser' | 'bucket';
+  onToolChange: (tool: 'brush' | 'eraser' | 'bucket') => void;
   canUndo: boolean;
   canRedo: boolean;
   onUndo: () => void;
@@ -63,6 +63,13 @@ const ColorEditorTools: React.FC<ColorEditorToolsProps> = ({
             🖌️ Brush
           </button>
           <button
+            className={`tool-button ${selectedTool === 'bucket' ? 'active' : ''}`}
+            onClick={() => onToolChange('bucket')}
+            title="Paint Bucket Tool - Flood fill connected areas (Hold Alt + Click to eyedrop colors)"
+          >
+            🪣 Bucket
+          </button>
+          <button
             className={`tool-button ${selectedTool === 'eraser' ? 'active' : ''}`}
             onClick={() => onToolChange('eraser')}
             title="Eraser Tool - Remove colors"
@@ -115,8 +122,9 @@ const ColorEditorTools: React.FC<ColorEditorToolsProps> = ({
       <div className="help-section">
         <h3>Tips</h3>
         <div className="help-text">
-          <p>💡 Hold <kbd>Alt</kbd> + click while using the brush tool to eyedrop colors from characters</p>
-          <p>📏 Hold <kbd>Shift</kbd> + click to paint straight lines from the last painted character</p>
+          <p>💡 Hold <kbd>Alt</kbd> + click while using brush or bucket tools to eyedrop colors</p>
+          <p>📏 Hold <kbd>Shift</kbd> + click with brush tool to paint straight lines</p>
+          <p>🪣 Use bucket tool to flood fill connected areas of the same color</p>
         </div>
       </div>
     </div>
