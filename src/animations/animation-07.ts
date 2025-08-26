@@ -247,7 +247,7 @@ export function createAnimation(version: string = '0.0.1'): Animation {
     content: `
 ┌──                                ──┐
 │                  ▄▄▄▄▄▄▄▄          │
-    Welcome totH▄▄███████████▄▄▄      
+    Welcome to G▄▄███████████▄▄▄      
     █████┐ ███▌█████████████▀▀▀▀█     
    ██┌───┘██┌─▐███████████████  ▐▌    
    ██│    ██│ ▐████████████████ ▐▌    
