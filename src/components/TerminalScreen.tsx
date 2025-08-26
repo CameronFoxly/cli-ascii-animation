@@ -35,6 +35,9 @@ const TerminalScreen: React.FC<TerminalScreenProps> = ({
   const [isAltPressed, setIsAltPressed] = useState(false);
   const [isShiftPressed, setIsShiftPressed] = useState(false);
 
+  // selectedColor is available for future editing functionality
+  void selectedColor;
+
   // Parse content into a 2D character grid
   const parseContent = useCallback((): string[][] => {
     const lines = content.split('\n');
