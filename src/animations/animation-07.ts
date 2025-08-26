@@ -6233,6 +6233,6 @@ export function createAnimation(version: string = '0.0.1'): Animation {
     frames
   };
 }
-
+ 
 const animation: Animation = createAnimation();
 export default animation;
