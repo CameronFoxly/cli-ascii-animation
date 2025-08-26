@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Color Constants Optimization Test</title>
+</head>
+<body>
+    <h1>Color Constants Optimization Test</h1>
+    <p>This test demonstrates how the optimized exporter only includes used color constants</p>
+    
+    <div id="results"></div>
+    
+    <script type="module">
+        // Simulate the color optimization logic
+        const ANSI_COLOR_NAMES = [
+            'Black', 'Red', 'Green', 'Yellow', 'Blue', 'Magenta', 'Cyan', 'White',
+            'Bright Black', 'Bright Red', 'Bright Green', 'Bright Yellow', 
+            'Bright Blue', 'Bright Magenta', 'Bright Cyan', 'Bright White'
+        ];
+
+        function getUsedColorIndices(animation) {
+            const usedColors = new Set();
+            
+            animation.frames.forEach(frame => {
+                if (frame.colors) {
+                    Object.values(frame.colors).forEach(colorIndex => {
+                        usedColors.add(colorIndex);
+                    });
+                }
+            });
+            
+            return usedColors;
+        }
+
+        function generateColorConstants(animation) {
+            const usedColorIndices = getUsedColorIndices(animation);
+            
+            if (usedColorIndices.size === 0) {
+                return ''; // No colors used, no constants needed
+            }
+            
+            const constants = Array.from(usedColorIndices)
+                .sort((a, b) => a - b)
+                .map(index => {
+                    const name = ANSI_COLOR_NAMES[index];
+                    const constantName = name.toUpperCase().replace(/\s+/g, '_');
+                    return `const ${constantName} = ${index};`;
+                });
+            
+            return constants.length > 0 ? constants.join('\n') : '';
+        }
+
+        // Test Case 1: Animation with no colors
+        const animationNoColors = {
+            frames: [
+                { title: "Frame 1", content: "Simple text", duration: 100 },
+                { title: "Frame 2", content: "More text", duration: 100 }
+            ]
+        };
+
+        // Test Case 2: Animation with only a few colors
+        const animationFewColors = {
+            frames: [
+                { 
+                    title: "Frame 1", 
+                    content: "Colored text", 
+                    duration: 100,
+                    colors: {
+                        "0,0": 1,  // Red
+                        "0,1": 13, // Bright Magenta
+                        "1,0": 1   // Red again
+                    }
+                }
+            ]
+        };
+
+        // Test Case 3: Animation with many colors
+        const animationManyColors = {
+            frames: [
+                { 
+                    title: "Frame 1", 
+                    content: "Rainbow text", 
+                    duration: 100,
+                    colors: {
+                        "0,0": 1,  // Red
+                        "0,1": 2,  // Green
+                        "0,2": 4,  // Blue
+                        "0,3": 13, // Bright Magenta
+                        "0,4": 14, // Bright Cyan
+                        "0,5": 15  // Bright White
+                    }
+                }
+            ]
+        };
+
+        const results = document.getElementById('results');
+        
+        results.innerHTML = `
+            <h2>Test Case 1: No Colors</h2>
+            <p>Used colors: ${Array.from(getUsedColorIndices(animationNoColors)).join(', ') || 'None'}</p>
+            <pre>Generated constants:\n${generateColorConstants(animationNoColors) || '(None - no constants generated)'}</pre>
+            
+            <h2>Test Case 2: Few Colors (Red and Bright Magenta)</h2>
+            <p>Used colors: ${Array.from(getUsedColorIndices(animationFewColors)).sort((a,b) => a-b).join(', ')}</p>
+            <pre>Generated constants:\n${generateColorConstants(animationFewColors)}</pre>
+            
+            <h2>Test Case 3: Many Colors</h2>
+            <p>Used colors: ${Array.from(getUsedColorIndices(animationManyColors)).sort((a,b) => a-b).join(', ')}</p>
+            <pre>Generated constants:\n${generateColorConstants(animationManyColors)}</pre>
+            
+            <h2>Benefits:</h2>
+            <ul>
+                <li>✅ Only includes color constants that are actually used</li>
+                <li>✅ Reduces file size for animations with few/no colors</li>
+                <li>✅ Maintains readability for color mappings</li>
+                <li>✅ Keeps the exported files clean and minimal</li>
+            </ul>
+        `;
+    </script>
+</body>
+</html>
